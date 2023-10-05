@@ -5,14 +5,12 @@
                     <div class="card-header"><strong>Importar reporte</strong></div>
                     <div class="card-body">
                     <div class="example">
-                        <!-- <div class="mb-3">
-                        <label class="form-label" for="formFile">Default file input example</label>
-                        <input class="form-control" id="formFile" type="file">
-                        </div>-->
-                        <form method="post" action="<?php echo route('pdf.convertir'); ?>">
+                        <form method="post" action="<?php echo route('pdf.convertir'); ?>" enctype="multipart/form-data">
+                            @csrf
                             <div class="mb-3">
                             <label class="form-label" for="formFileMultiple">Inserte sus archivos en formato Excel (xls o xlsx)</label>
-                            <input class="form-control" id="archivos" type="file" multiple="">
+                            <!-- <input class="form-control" id="archivos" name="archivos[]" type="file" multiple="" accept=".xlsx, .xls">-->
+                            <input class="form-control" id="archivos" name="archivos" type="file" accept=".xlsx, .xls">
                             </div>
                             <div class="mb-3">
                                 <button class="btn btn-primary px-4" type="submit">Enviar</button>

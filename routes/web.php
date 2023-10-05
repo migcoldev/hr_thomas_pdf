@@ -22,4 +22,7 @@ Route::post('/user/authenticate', UserController::class .'@authenticate')->name(
 
 Route::get('/', PDFController::class .'@index')->name('pdf.index');
 Route::get('/importar-excel', PDFController::class .'@importar')->name('pdf.importar');
+//Route::get('/convertir-excel', PDFController::class .'@convertir')->name('pdf.convertir');
 Route::post('/convertir-excel', PDFController::class .'@convertir')->name('pdf.convertir');
+Route::get('/pdf/usil-template', PDFController::class .'@usiltemplate')->name('pdf.usiltemplate');
+Route::post('/pdf/upload-blob', PDFController::class .'@uploadblob')->name('pdf.uploadblob');
