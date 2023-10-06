@@ -57,7 +57,7 @@ class PDFController extends Controller
 
         session(['info_global' => []]);
         
-        $rows = SimpleExcelReader::create(Storage::disk('local')->path($filename))->trimHeaderRow()
+        $rows = SimpleExcelReader::create(Storage::disk('local')->path($filename), 'xlsx')->trimHeaderRow()
         ->fromSheetName("Resultado1")
         ->useHeaders(['candidato','carrera','facultad','nivel_promedio','competencia','nivel','definicion'])
         ->getRows();
@@ -102,7 +102,7 @@ class PDFController extends Controller
 
         //Resultados Generales
         session(['report' => []]);
-        $rows = SimpleExcelReader::create(Storage::disk('local')->path("originales/".$document->original_file))->trimHeaderRow()
+        $rows = SimpleExcelReader::create(Storage::disk('local')->path("originales/".$document->original_file), 'xlsx')->trimHeaderRow()
         ->fromSheetName("Resultado1")
         ->useHeaders(['candidato','carrera','facultad','nivel_promedio','competencia','nivel','definicion'])
         ->getRows();
@@ -132,7 +132,7 @@ class PDFController extends Controller
             $arrAux['resultados_generales'][] = $data;
             session(['report' => $arrAux]);
         });
-        $rows = SimpleExcelReader::create(Storage::disk('local')->path("originales/".$document->original_file))->trimHeaderRow()
+        $rows = SimpleExcelReader::create(Storage::disk('local')->path("originales/".$document->original_file), 'xlsx')->trimHeaderRow()
         ->fromSheetName("Resultado2")
         ->useHeaders(['candidato','carrera','facultad','nivel_promedio','Evaluación','Rasgo','Resultado','Detalle'])
         ->getRows();
