@@ -37,7 +37,7 @@
                             <div class="fw-semibold"><a href="{{$storage_url."/reportes/".$document->converted_file}}">{{$document->converted_file}}</a></div>
                           </td>
                           <td>
-                            <div class="fw-semibold"><a href="{{$storage_url."/originales/".$document->converted_file}}">{{$document->original_file}}</a></div>
+                            <div class="fw-semibold"><a href="{{$storage_url."/originales/".$document->original_file}}">{{$document->original_file}}</a></div>
                           </td>
                         </tr>
                         @endforeach
