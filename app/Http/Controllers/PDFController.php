@@ -41,7 +41,7 @@ class PDFController extends Controller
         $fullname = $request->file('archivos')->getClientOriginalName();
         $name = explode('.', $fullname)[0];
         $extension = $request->file('archivos')->getClientOriginalExtension();
-        $new_name = $name."-".time().".".$extension;
+        $new_name = filter_var(($name."-".time()), FILTER_SANITIZE_STRING).".".$extension;
         $filename = $request->file('archivos')->storeAs('originales', $new_name);
         session(['info_global' => []]);
         
