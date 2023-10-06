@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function login(Request $request): View
     {
-        return view('login');
+        return view('login', ['message' => $request->message]);
     }
     
     public function authenticate(Request $request)
@@ -21,7 +21,7 @@ class UserController extends Controller
         ]);
  
         //if (Auth::attempt($credentials)) {
-        if(trim($request->username) == "admin" && trim($request->password) == "1234"){
+        if(trim($request->username) == "admin" && trim($request->password) == "PDF2024@"){
             $request->session()->regenerate();
             session(['username' => 'admin']);
             return redirect()->action([PDFController::class, 'index']);
@@ -30,7 +30,7 @@ class UserController extends Controller
         }
  
         return back()->withErrors([
-            'username' => 'The provided credentials do not match our records.',
+            'username' => 'Usuario y/o contraseña incorrectos.',
         ])->onlyInput('username');
     }
 

@@ -1,6 +1,17 @@
 @include('layouts.header')
           <div class="row">
             <div class="col-md-12">
+              @if (trim($message) == 'archivo_importado')
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                El archivo fue importado y convertido con éxito.
+                  <button class="btn-close" type="button" data-coreui-dismiss="alert" aria-label="Close"></button>
+                </div>
+              @elseif (trim($message) == 'error')
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                Ocurrió un error, por favor inténtelo nuevamente.
+                  <button class="btn-close" type="button" data-coreui-dismiss="alert" aria-label="Close"></button>
+                </div>
+              @endif
               <div class="card mb-4">
                 <div class="card-header">Listado de Reportes convertidos</div>
                   <div class="table-responsive">
@@ -14,34 +25,22 @@
                         </tr>
                       </thead>
                       <tbody>
+                        @foreach ($documents as $document)
                         <tr class="align-middle">
                           <td class="text-center">
-                            <div>Ariana Pucutay</div>
+                            <div>{{$document->person}}</div>
                           </td>
                           <td class="text-center">
-                            <div class="fw-semibold">Oct 5, 2023</div>
+                            <div class="fw-semibold">{{$document->created_at}}</div>
                           </td>
                           <td>
-                            <div class="fw-semibold"><a href="#">ariana-19292930.pdf</a></div>
+                            <div class="fw-semibold"><a href="{{$storage_url."/reportes/".$document->converted_file}}">{{$document->converted_file}}</a></div>
                           </td>
                           <td>
-                            <div class="fw-semibold"><a href="#">original(1).xlsx</a></div>
+                            <div class="fw-semibold"><a href="{{$storage_url."/originales/".$document->converted_file}}">{{$document->original_file}}</a></div>
                           </td>
                         </tr>
-                        <tr class="align-middle">
-                          <td class="text-center">
-                            <div>Ariana Pucutay</div>
-                          </td>
-                          <td class="text-center">
-                            <div class="fw-semibold">Oct 4, 2023</div>
-                          </td>
-                          <td>
-                            <div class="fw-semibold"><a href="#">ariana-542322.pdf</a></div>
-                          </td>
-                          <td>
-                            <div class="fw-semibold"><a href="#">original.xlsx</a></div>
-                          </td>
-                        </tr>
+                        @endforeach
                       </tbody>
                     </table>
                   </div>

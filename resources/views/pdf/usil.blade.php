@@ -1,12 +1,3 @@
-<?php
-function convert_to_64($image)
-{
-  $type = pathinfo($image, PATHINFO_EXTENSION);
-  $data = file_get_contents($image);
-  $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-  return $base64;
-}
-?>
 <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -14,12 +5,14 @@ function convert_to_64($image)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USIL</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <style>
       @page {
         margin: 0;
       }
       #contenedor_pdf{
         width:850px;
+        margin: auto;
       }
       .page_break {
         page-break-before: always;
@@ -106,8 +99,12 @@ function convert_to_64($image)
       .table-1_aside {
         background-color: #0c5393;
         color: #FFF;
+        max-width: 200px;
       }
       .table-1_level {
+        text-align: center;
+      }
+      .table-1_levelBK {
         text-align: center;
         width: 150px;
       }
@@ -191,7 +188,7 @@ function convert_to_64($image)
       }
       .graphics-content {
         margin: 0 auto;
-        width: 400px;
+        width: 300px;
       }
       
     </style>
@@ -203,20 +200,20 @@ function convert_to_64($image)
           <table class="table-header">
             <tr>
               <td width="214">
-                <img src="' . convert_to_64($path_logo_thomas) . '" />
+                <img src="<?php echo url('/img/logo.png'); ?>" />
               </td>
               <td></td>
               <td width="134">
-                <img src="' . convert_to_64($path_logo_usil) . '" />
+                <img src="<?php echo url('/img/usil.png'); ?>" />
               </td>
             </tr>
           </table>
         </div>
         <div class="hero">
           <h1 class="title-main">Evaluación a Alumnos USIL</h1>
-          <h2 class="name">Alejandro Arias</h2>
-          <h3 class="datos facultad"><span class="datos-span">Facultad:</span> Xxxxxxxx Xxxxx</h3>
-          <h3 class="datos carrera"><span class="datos-span">Carrera:</span> Xxxxxxxx Xxxxx</h3>
+          <h2 class="name">{{ $report["candidato"] }}</h2>
+          <h3 class="datos facultad"><span class="datos-span">Facultad:</span> {{ $report["facultad"] }}</h3>
+          <h3 class="datos carrera"><span class="datos-span">Carrera:</span> {{ $report["carrera"] }}</h3>
         </div>
         <div class="title-content">
           <h2 class="title">RESULTADOS GENERALES</h2>
@@ -231,35 +228,17 @@ function convert_to_64($image)
               <td class="table-1_header">Nivel obtenido</td>
               <td class="table-1_header">Definición</td>
             </tr>
+            @foreach ($report["resultados_generales"] as $competencia)
             <tr>
-              <td class="table-1_aside">Comunicación integral</td>
-              <td class="table-1_basic table-1_level">Nivel 2</td>
-              <td class="table-1_basic">Redacta textos con propiedad valorando su entorno y todo aquello relacionado a este con la finalidad de ser un crítico activo de los cambios, innovaciones y transformaciones a todo nivel.</td>
+              <td class="table-1_aside">{{ $competencia["competencia"] }}</td>
+              <td class="table-1_basic table-1_level">{{ $competencia["nivel"] }}</td>
+              <td class="table-1_basic">{{ $competencia["definicion"] }}</td>
             </tr>
-            <tr>
-              <td class="table-1_aside">Comunicación Bilingüe</td>
-              <td class="table-1_basic table-1_level">Nivel 1</td>
-              <td class="table-1_basic">Comprende la importancia del inglés para sumar valor a su formación académica.</td>
-            </tr>
-            <tr>
-              <td class="table-1_aside">Emprendimiento</td>
-              <td class="table-1_basic table-1_level">Nivel 1</td>
-              <td class="table-1_basic">Distingue escenarios a futuro en los que le gustaría ser parte para empezar a plantear su proyecto de vida.</td>
-            </tr>
-            <tr>
-              <td class="table-1_aside">Investigación</td>
-              <td class="table-1_basic table-1_level">Nivel 1</td>
-              <td class="table-1_basic">Comprende el método científico para identificar las problemáticas de su entorno.</td>
-            </tr>
-            <tr>
-              <td class="table-1_aside">Desarrollo Humano y Sostenible</td>
-              <td class="table-1_basic table-1_level">Nivel 2</td>
-              <td class="table-1_basic">Genera y participa de manera activa en acciones que impulsen su perfil académico - laboral.</td>
-            </tr>
+            @endforeach
           </table>
           <div class="graphics">
             <div class="graphics-content">
-              <canvas id="myChart" width="400" height="400"></canvas>
+              <canvas id="myChart" width="350" height="350"></canvas>
             </div>
           </div>
         </div>
@@ -274,6 +253,10 @@ function convert_to_64($image)
           </div>
           <div class="definition-content">
             <div class="definition-header">
+                
+                <div class="graphics-content">
+                        <canvas id="myChart2" width="150" height="150"></canvas>
+                    </div>
             </div>
             <div class="definition-body">
               <h4 class="subtitle-4">Definición:</h4>
@@ -289,15 +272,19 @@ function convert_to_64($image)
                 <td width="50%">
                   <div class="definition-col">
                     <div class="definition-col_item">
-                      <img class="personality-icon" src="' . convert_to_64($path_check) . '" width="24" height="24" /> <span class="personality-icon_text">Fortalezas</span>
+                      <img class="personality-icon" src="<?php echo url('/img/check-mark.png'); ?>" width="24" height="24" /> <span class="personality-icon_text">Fortalezas</span>
                     </div>
                     <div class="definition-col_item">
-                      <img class="personality-icon" src="' . convert_to_64($path_graph) . '" width="24" height="24" /> <span class="personality-icon_text">Oportunidades de Mejora</span>
+                      <img class="personality-icon" src="<?php echo url('/img/line-chart.png'); ?>" width="24" height="24" /> <span class="personality-icon_text">Oportunidades de Mejora</span>
                     </div>
                   </div>
                 </td>
                 <td width="50%">
-                  <div class="definition-graph_content">Gráfico aquí</div>
+                  <div class="definition-graph_content">
+                    <div class="graphics-content">
+                        <canvas id="myChart3" width="200" height="200"></canvas>
+                    </div>
+                  </div>
                 </td>
               </tr>
             </table>
@@ -311,7 +298,18 @@ function convert_to_64($image)
               <td class="table-divisor_gap"></td>
               <td class="table-divisor_right_header" colspan="2">Resultado</td>
             </tr>
+            @foreach ($report["perfil_ideal"] as $perfil_ideal)
             <tr>
+              <td class="table-divisor_left_aside">
+                {{ $perfil_ideal["evaluacion"] }}
+              </td>
+              <td class="table-divisor_left_value">{{ $perfil_ideal["rasgo"] }}</td>
+              <td class="table-divisor_gap"></td>
+              <td class="table-divisor_right_aside">{{ $perfil_ideal["resultado"] }}</td>
+              <td class="table-divisor_right_value">{{ $perfil_ideal["detalle"] }}</td>
+            </tr>
+            @endforeach
+            <!--<tr>
               <td class="table-divisor_left_aside" rowspan="2">
                 Estilo Conductual<br> Prueba PPA
               </td>
@@ -325,79 +323,22 @@ function convert_to_64($image)
               <td class="table-divisor_gap"></td>
               <td class="table-divisor_right_aside">Fortaleza</td>
               <td class="table-divisor_right_value">El gusto que tienes por escuchar a otras personas, generará un impacto positivo y de apertura en tu audiencia</td>
-            </tr>
-
-            <tr>
-              <td class="table-divisor_left_aside" rowspan="4">
-                Inteligencia<br> Emocional<br> Prueba TEIQ
-              </td>
-              <td class="table-divisor_left_value">Alta Empatía</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">Oportunidad de Mejora</td>
-              <td class="table-divisor_right_value">
-              Es importante valorar la posición de tu entorno cuando mostramos una posición crítica en todo nivel
-              </td>
-            </tr>
-            <tr>
-              <td class="table-divisor_left_value">Alta Adaptabilidad</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">Oportunidad de Mejora</td>
-              <td class="table-divisor_right_value">
-              Es importante entender que pueden haber distintas percepciones e interpretaciones, sin la necesidad que tengamos que coincidir con las mismas
-              </td>
-            </tr>
-            <tr>
-              <td class="table-divisor_left_value">Alta Asertividad</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">Fortaleza</td>
-              <td class="table-divisor_right_value">
-              Tu alta asertividad te ayudará a sostener tus ideas y pensamientos con claridad.
-              </td>
-            </tr>
-            <tr>
-              <td class="table-divisor_left_value">Alta Percepción emocional</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">Oportunidad de Mejora</td>
-              <td class="table-divisor_right_value">
-              Es importante identificar y considerar las emociones de las personas en tu entorno cuando mostramos una posición crítica a todo nivel
-              </td>
-            </tr>
-
-            <tr>
-              <td class="table-divisor_left_aside" rowspan="2">
-                Potencial para el<br> Liderazgo<br> Prueba HPTI
-              </td>
-              <td class="table-divisor_left_value">Autoexigencia Moderado</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">Fortaleza</td>
-              <td class="table-divisor_right_value">
-              Tu autoexigencia moderada te ayudará a conocer y entender algunos detalles valorados por tu entorno
-              </td>
-            </tr>
-            <tr>
-              <td class="table-divisor_left_value">Curiosidad Moderado</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">Fortaleza</td>
-              <td class="table-divisor_right_value">
-              Tu curiosidad moderada te ayudará a encontrar distintos medios de comunicación que puedan estar a tu alcance
-              </td>
-            </tr>
+            </tr>-->
           </table>
         </div>
       </div>
     </div>
 
     <script>
-      var ctx = document.getElementById("myChart").getContext("2d");
-
-      new Chart(ctx, {
+      var ctxPie = document.getElementById("myChart").getContext("2d");
+      new Chart(ctxPie, {
         type: "pie",
         data: {
-          labels: ["Nivel 1", "Nivel 2"],
+          labels: ["Nivel 1", "Nivel 2", "Nivel 3"],
           datasets: [{
             // label: "# of Votes",
-            data: [67, 33],
-            backgroundColor: ["#0d5393", "#00afaa"],
+            data: [{{$grafica1["total_nivel1"]}}, {{$grafica1["total_nivel2"]}}, {{$grafica1["total_nivel3"]}}],
+            backgroundColor: ["#0d5393", "#00afaa", "#5693cb"],
             borderWidth: 0
           }]
         },
@@ -406,6 +347,121 @@ function convert_to_64($image)
           plugins: {
             legend: {
               position: "top",
+            },
+            labels: {
+                render: 'percentage',
+                fontColor: ['green', 'white', 'red'],
+                precision: 3
+            },
+            title: {
+              display: false,
+            }
+          }
+        }
+      });
+
+      const circuference = 150; // deg
+      var bgColor = ["#00afaa", "#00afaa", "#00afaa"];
+        if('{{$report["nivel_promedio"]}}' == 1 || '{{$report["nivel_promedio"]}}' == '1' || '{{$report["nivel_promedio"]}}' == 'Nivel 1'){
+            bgColor = ["#0d5393", "#00afaa", "#00afaa"];
+        }else if('{{$report["nivel_promedio"]}}' == 2 || '{{$report["nivel_promedio"]}}' == '2' || '{{$report["nivel_promedio"]}}' == 'Nivel 2'){
+            bgColor = ["#0d5393", "#0d5393", "#00afaa"];
+        }else if('{{$report["nivel_promedio"]}}' == 3 || '{{$report["nivel_promedio"]}}' == '3' || '{{$report["nivel_promedio"]}}' == 'Nivel 3'){
+            bgColor = ["#0d5393", "#0d5393", "#0d5393"];
+        }
+        const data = {
+        labels: ["Nivel 1", "Nivel 2", "Nivel 3"],
+        datasets: [
+            {
+                data: [1, 1, 1],
+                backgroundColor: bgColor
+            }
+        ]
+        };
+
+        const config = {
+            type: "doughnut",
+            data: data,
+            options: {   
+                reponsive: true,
+                maintainAspectRatio: false,
+                rotation: (circuference / 2) * -1,
+                circumference: circuference,
+                cutout: "80%",
+                borderWidth: 0,
+                borderRadius: function (context, options) {
+                    const index = context.dataIndex;
+                    let radius = {};
+                    if (index == 0) {
+                        radius.innerStart = 50;
+                        radius.outerStart = 50;
+                    }
+                    if (index === context.dataset.data.length - 1) {
+                        radius.innerEnd = 50;
+                        radius.outerEnd = 50;
+                    }
+                    return radius;
+                },
+                plugins: {
+                    title: false,
+                    subtitle: false,
+                    legend: true
+                },
+                /*animation: {
+                    onComplete: function () {
+                        var canvas = document.getElementById("myChart2");
+                        var ctx = canvas.getContext('2d');
+                        var cw = canvas.offsetWidth;
+                        var ch = canvas.offsetHeight;
+                        var cx = cw / 2;
+                        var cy = ch - (ch / 5);
+
+                        ctx.translate(cx, cy);
+                        ctx.rotate((-45 * Math.PI / 180));
+                        ctx.beginPath();
+                        ctx.moveTo(0, -5);
+                        ctx.lineTo(150, 0);
+                        ctx.lineTo(0, 5);
+                        ctx.fillStyle = 'rgba(0, 76, 0, 0.8)';
+                        ctx.fill();
+                        ctx.rotate(-(-45 * Math.PI / 180));
+                        ctx.translate(-cx, -cy);
+                        ctx.beginPath();
+                        ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+                        ctx.fill();
+                        //drawNeedle(150, -45 * Math.PI / 180);
+                    }
+                }*/
+            }
+        };
+
+        const ctxSpeed = new Chart("myChart2", config);
+      var ctxDona = document.getElementById("myChart3").getContext("2d");
+      new Chart(ctxDona, {
+        type: "doughnut",
+        data: {
+          labels: ["Fortalezas {{$grafica3['fortalezas_porc']}}%", "Oportunidades de Mejora {{$grafica3['oportunidades_porc']}}%"],
+          datasets: [{
+            // label: "# of Votes",
+            data: [{{$grafica3["fortalezas"]}}, {{$grafica3["oportunidades"]}}],
+            backgroundColor: ["#0d5393", "#00afaa"],
+            borderWidth: 0
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: "bottom",
+            },
+            datalabels: {
+                color: 'white',
+                textAlign: 'center',
+                formatter: function(value, ctx) {
+                var index = ctx.dataIndex;
+                var label = ctx.chart.data.labels[index];
+                return label + '\n' + value;
+                }
             },
             title: {
               display: false,
@@ -460,7 +516,7 @@ function convert_to_64($image)
           var img = canvas.toDataURL("image/jpeg");
           const imgProps= pdf.getImageProperties(img);
           pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-          document.getElementById("contenedor_pdf").style.display = 'none';
+          //document.getElementById("contenedor_pdf").style.display = 'none';
           pdf.addImage(img, 'PNG', 0, div_anterior, pdfWidth, pdfHeight);
           
           //if(i < slides.length){

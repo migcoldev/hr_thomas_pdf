@@ -42,6 +42,12 @@
               <div class="card col-md-7 p-4 mb-0">
                 <div class="card-body">
                   <h1>Login</h1>
+                  @if($errors->any())
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    {{$errors->first()}}
+                      <button class="btn-close" type="button" data-coreui-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                  @endif
                   <p class="text-medium-emphasis">Iniciar sesión con sus datos</p>
                   <form method="post" action="<?php echo route('user.authenticate'); ?>">
                     @csrf
