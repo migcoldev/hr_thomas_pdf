@@ -36,7 +36,7 @@ return [
             'throw' => false,
             'permissions' => [
                 'file' => [
-                    'public' => 0775,
+                    'public' => 0644,
                     'private' => 0600,
                 ],
                 'dir' => [
@@ -44,6 +44,14 @@ return [
                     'private' => 0700,
                 ],
             ],
+        ],
+
+        'reportes' => [
+            'driver' => 'local',
+            'root' => storage_path('app/reportes'),
+            'url' => env('APP_URL').'/storage/reportes',
+            'visibility' => 'public',
+            'throw' => false,
         ],
 
         'public' => [
