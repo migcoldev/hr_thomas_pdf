@@ -187,7 +187,11 @@ class PDFController extends Controller
         //Storage::put("reportes/".$doc_name, $request->pdf, 'public');
         //Storage::disk('reportes')->put($doc_name, $request->pdf);
         $storagePath = storage_path('app/reportes');
-        file_put_contents($storagePath."/".$doc_name, $request->pdf);
+        move_uploaded_file(
+            $_FILES['pdf']['tmp_name'], 
+            $storagePath."/".$doc_name
+        );
+        //file_put_contents($storagePath."/".$doc_name, $request->pdf);
 
         $document = ReportDocument::where("original_file",trim($request->name))->first();
         $document->update([ 'converted_file' => $doc_name ]);
