@@ -190,19 +190,6 @@ class PDFController extends Controller
         $document->update([ 'converted_file' => $doc_name ]);
 
         return response()->json(['file' => $doc_name], 200);
-        /*$document = new ReportDocument([
-            'id_user' => 1,
-            'file_type' => 'pdf',
-            'person' => 'sape',
-            'original_file' => trim($request->name),
-            'converted_file' => $doc_name,
-            'created_at' => now()
-        ]);
-        if($document->save()){
-            return response()->json(['file' => $document->converted_file], 200);
-        }else{
-            return response()->json(['file' => $document->converted_file], 400);
-        }*/
     }
 
 }
