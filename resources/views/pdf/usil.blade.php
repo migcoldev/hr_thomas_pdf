@@ -1,17 +1,151 @@
-<!DOCTYPE html>
-  <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>USIL</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
-    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script>
-      
-    </script>
+@include('layouts.headerPDF')
+          <div class="row">
+            <div class="col-md-12">
+              <div style="text-align:center; padding: 20px;">
+                <button class="btn btn-primary" type="button" disabled>
+                  <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                  <span role="status">Generando PDF...</span>
+                </button>
+              </div>
+    <div id="contenedor_pdf">
+      <div id="page-1" class="page-1 pdf-page">
+        <div class="header-pdf">
+          <table class="table-header">
+            <tr>
+              <td width="214">
+                <img src="<?php echo url('/img/logo.png'); ?>" />
+              </td>
+              <td></td>
+              <td width="134">
+                <img src="<?php echo url('/img/usil.png'); ?>" />
+              </td>
+            </tr>
+          </table>
+        </div>
+        <div class="hero">
+          <h1 class="title-main">Evaluación a Alumnos USIL</h1>
+          <h2 class="name">{{ $report["candidato"] }}</h2>
+          <h3 class="datos facultad"><span class="datos-span">Facultad:</span> {{ $report["facultad"] }}</h3>
+          <h3 class="datos carrera"><span class="datos-span">Carrera:</span> {{ $report["carrera"] }}</h3>
+        </div>
+        <div class="title-content">
+          <h2 class="title">RESULTADOS GENERALES</h2>
+        </div>
+        <div class="body">
+          <div class="subtitle-content">
+            <h3 class="subtitle">Las competencias evaluadas serán calificadas entre el Nivel 1, Nivel 2 y Nivel 3, siendo este último el mayor nivel a obtener.</h3>
+          </div>
+          <table class="table-1">
+            <tr>
+              <td class="table-1_header">Competencias</td>
+              <td class="table-1_header">Nivel obtenido</td>
+              <td class="table-1_header">Definición</td>
+            </tr>
+            @foreach ($report["resultados_generales"] as $competencia)
+            <tr>
+              <td class="table-1_aside">{{ $competencia["competencia"] }}</td>
+              <td class="table-1_basic table-1_level">{{ $competencia["nivel"] }}</td>
+              <td class="table-1_basic">{{ $competencia["definicion"] }}</td>
+            </tr>
+            @endforeach
+          </table>
+          <div class="graphics">
+            <div class="graphics-content">
+              <canvas id="myChart" width="350" height="350"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+      <?php $index = 2; ?>
+      @foreach ($report["perfil_ideal"] as $key=>$perfil_ideal_competencia)
+      <div id="page-{{$index}}" class="page-{{$index}} page_break pdf-page">
+        <div class="title-content">
+          <h2 class="title">{{$key}}</h2>
+        </div>
+        <div class="body">
+          <div class="subtitle-content">
+            <h3 class="subtitle">Nivel Obtenido</h3>
+          </div>
+          <div class="definition-content">
+            <div class="definition-header">
+                
+                <div class="graphics-content">
+                        <canvas id="myChart2-{{$index}}" width="150" height="150"></canvas>
+                    </div>
+            </div>
+            <div class="definition-body">
+              <h4 class="subtitle-4">Definición:</h4>
+              <p>{{$report["resultados_generales"][$key]["definicion"]}}</p>
+            </div>
+          </div>
+          <div class="subtitle-content">
+            <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
+          </div>
+          <div class="personality-content">
+            <table class="table-definition_grid">
+              <tr>
+                <td width="50%">
+                  <div class="definition-col">
+                    <div class="definition-col_item">
+                      <img class="personality-icon" src="<?php echo url('/img/check-mark.png'); ?>" width="24" height="24" /> <span class="personality-icon_text">Fortalezas</span>
+                    </div>
+                    <div class="definition-col_item">
+                      <img class="personality-icon" src="<?php echo url('/img/line-chart.png'); ?>" width="24" height="24" /> <span class="personality-icon_text">Oportunidades de Mejora</span>
+                    </div>
+                  </div>
+                </td>
+                <td width="50%">
+                  <div class="definition-graph_content">
+                    <div class="graphics-content">
+                        <canvas id="myChart3-{{$index}}" width="200" height="200"></canvas>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+            </table>
+          </div>
+          <div class="subtitle-content">
+            <h3 class="subtitle">Perfil Ideal Comunicación Integral</h3>
+          </div>
+          <table class="table-divisor">
+            <tr>
+              <td class="table-divisor_left_header" colspan="2">Perfil Ideal</td>
+              <td class="table-divisor_gap"></td>
+              <td class="table-divisor_right_header" colspan="2">Resultado</td>
+            </tr>
+            @foreach ($perfil_ideal_competencia as $perfil_ideal)
+            <tr>
+              <td class="table-divisor_left_aside">
+                {{ $perfil_ideal["evaluacion"] }}
+              </td>
+              <td class="table-divisor_left_value">{{ $perfil_ideal["rasgo"] }}</td>
+              <td class="table-divisor_gap"></td>
+              <td class="table-divisor_right_aside">{{ $perfil_ideal["resultado"] }}</td>
+              <td class="table-divisor_right_value">{{ $perfil_ideal["detalle"] }}</td>
+            </tr>
+            @endforeach
+            <!--<tr>
+              <td class="table-divisor_left_aside" rowspan="2">
+                Estilo Conductual<br> Prueba PPA
+              </td>
+              <td class="table-divisor_left_value">Alta Influencia</td>
+              <td class="table-divisor_gap"></td>
+              <td class="table-divisor_right_aside">Fortaleza</td>
+              <td class="table-divisor_right_value">El gusto que tienes por la interacción con personas te facilitará en la generación de espacios de diálogo</td>
+            </tr>
+            <tr>
+              <td class="table-divisor_left_value">Alta Estabilidad</td>
+              <td class="table-divisor_gap"></td>
+              <td class="table-divisor_right_aside">Fortaleza</td>
+              <td class="table-divisor_right_value">El gusto que tienes por escuchar a otras personas, generará un impacto positivo y de apertura en tu audiencia</td>
+            </tr>-->
+          </table>
+        </div>
+      </div>
+      {{ $index = $index + 1 }}
+      @endforeach
+    </div>
+
     <style>
       @page {
         margin: 0;
@@ -23,11 +157,7 @@
       .page_break {
         page-break-before: always;
       }
-      body {
-        font-family: "Arial", "Helvetica", sans-serif;
-        line-height: 1.1;
-      }
-      .header {
+      .header-pdf {
         background-color: #0c5393;
         color: #FFF;
         padding: 16px 24px;
@@ -198,147 +328,6 @@
       }
       
     </style>
-  </head>
-  <body>
-    <div id="contenedor_pdf">
-      <div id="page-1" class="page-1 pdf-page">
-        <div class="header">
-          <table class="table-header">
-            <tr>
-              <td width="214">
-                <img src="<?php echo url('/img/logo.png'); ?>" />
-              </td>
-              <td></td>
-              <td width="134">
-                <img src="<?php echo url('/img/usil.png'); ?>" />
-              </td>
-            </tr>
-          </table>
-        </div>
-        <div class="hero">
-          <h1 class="title-main">Evaluación a Alumnos USIL</h1>
-          <h2 class="name">{{ $report["candidato"] }}</h2>
-          <h3 class="datos facultad"><span class="datos-span">Facultad:</span> {{ $report["facultad"] }}</h3>
-          <h3 class="datos carrera"><span class="datos-span">Carrera:</span> {{ $report["carrera"] }}</h3>
-        </div>
-        <div class="title-content">
-          <h2 class="title">RESULTADOS GENERALES</h2>
-        </div>
-        <div class="body">
-          <div class="subtitle-content">
-            <h3 class="subtitle">Las competencias evaluadas serán calificadas entre el Nivel 1, Nivel 2 y Nivel 3, siendo este último el mayor nivel a obtener.</h3>
-          </div>
-          <table class="table-1">
-            <tr>
-              <td class="table-1_header">Competencias</td>
-              <td class="table-1_header">Nivel obtenido</td>
-              <td class="table-1_header">Definición</td>
-            </tr>
-            @foreach ($report["resultados_generales"] as $competencia)
-            <tr>
-              <td class="table-1_aside">{{ $competencia["competencia"] }}</td>
-              <td class="table-1_basic table-1_level">{{ $competencia["nivel"] }}</td>
-              <td class="table-1_basic">{{ $competencia["definicion"] }}</td>
-            </tr>
-            @endforeach
-          </table>
-          <div class="graphics">
-            <div class="graphics-content">
-              <canvas id="myChart" width="350" height="350"></canvas>
-            </div>
-          </div>
-        </div>
-      </div>
-      <?php $index = 2; ?>
-      @foreach ($report["perfil_ideal"] as $key=>$perfil_ideal_competencia)
-      <div id="page-{{$index}}" class="page-{{$index}} page_break pdf-page">
-        <div class="title-content">
-          <h2 class="title">{{$key}}</h2>
-        </div>
-        <div class="body">
-          <div class="subtitle-content">
-            <h3 class="subtitle">Nivel Obtenido</h3>
-          </div>
-          <div class="definition-content">
-            <div class="definition-header">
-                
-                <div class="graphics-content">
-                        <canvas id="myChart2-{{$index}}" width="150" height="150"></canvas>
-                    </div>
-            </div>
-            <div class="definition-body">
-              <h4 class="subtitle-4">Definición:</h4>
-              <p>{{$report["resultados_generales"][$key]["definicion"]}}</p>
-            </div>
-          </div>
-          <div class="subtitle-content">
-            <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
-          </div>
-          <div class="personality-content">
-            <table class="table-definition_grid">
-              <tr>
-                <td width="50%">
-                  <div class="definition-col">
-                    <div class="definition-col_item">
-                      <img class="personality-icon" src="<?php echo url('/img/check-mark.png'); ?>" width="24" height="24" /> <span class="personality-icon_text">Fortalezas</span>
-                    </div>
-                    <div class="definition-col_item">
-                      <img class="personality-icon" src="<?php echo url('/img/line-chart.png'); ?>" width="24" height="24" /> <span class="personality-icon_text">Oportunidades de Mejora</span>
-                    </div>
-                  </div>
-                </td>
-                <td width="50%">
-                  <div class="definition-graph_content">
-                    <div class="graphics-content">
-                        <canvas id="myChart3-{{$index}}" width="200" height="200"></canvas>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            </table>
-          </div>
-          <div class="subtitle-content">
-            <h3 class="subtitle">Perfil Ideal Comunicación Integral</h3>
-          </div>
-          <table class="table-divisor">
-            <tr>
-              <td class="table-divisor_left_header" colspan="2">Perfil Ideal</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_header" colspan="2">Resultado</td>
-            </tr>
-            @foreach ($perfil_ideal_competencia as $perfil_ideal)
-            <tr>
-              <td class="table-divisor_left_aside">
-                {{ $perfil_ideal["evaluacion"] }}
-              </td>
-              <td class="table-divisor_left_value">{{ $perfil_ideal["rasgo"] }}</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">{{ $perfil_ideal["resultado"] }}</td>
-              <td class="table-divisor_right_value">{{ $perfil_ideal["detalle"] }}</td>
-            </tr>
-            @endforeach
-            <!--<tr>
-              <td class="table-divisor_left_aside" rowspan="2">
-                Estilo Conductual<br> Prueba PPA
-              </td>
-              <td class="table-divisor_left_value">Alta Influencia</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">Fortaleza</td>
-              <td class="table-divisor_right_value">El gusto que tienes por la interacción con personas te facilitará en la generación de espacios de diálogo</td>
-            </tr>
-            <tr>
-              <td class="table-divisor_left_value">Alta Estabilidad</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">Fortaleza</td>
-              <td class="table-divisor_right_value">El gusto que tienes por escuchar a otras personas, generará un impacto positivo y de apertura en tu audiencia</td>
-            </tr>-->
-          </table>
-        </div>
-      </div>
-      {{ $index = $index + 1 }}
-      @endforeach
-    </div>
-
     <script>
       var ctxPie = document.getElementById("myChart").getContext("2d", { willReadFrequently: true });
       new Chart(ctxPie, {
@@ -552,11 +541,14 @@
             });
             fetchRes.then(res => 
                     res.json()).then(d => { 
-                        window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
+                        //window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
                     }) 
           //window.close();
         }, 1500);
       }, 1500);
     </script>
-  </body>
-  </html>
+            </div>
+            <!-- /.col-->
+          </div>
+          <!-- /.row-->
+@include('layouts.footer')
