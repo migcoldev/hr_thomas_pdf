@@ -56,7 +56,6 @@
           </div>
         </div>
       </div>
-      <?php $index = 2; ?>
       @foreach ($report["perfil_ideal"] as $key=>$perfil_ideal_competencia)
       <div id="page-{{$index}}" class="page-{{$index}} page_break pdf-page">
         <div class="title-content">
@@ -69,13 +68,13 @@
           <div class="definition-content">
             <div class="definition-header">
                 
-                <div class="graphics-content">
+                <div class="graphics-content-2">
                         <canvas id="myChart2-{{$index}}" width="150" height="150"></canvas>
                     </div>
             </div>
             <div class="definition-body">
               <h4 class="subtitle-4">Definición:</h4>
-              <p>{{$report["resultados_generales"][$key]["definicion"]}}</p>
+              <p class="parrafo-4">{{$report["resultados_generales"][$key]["definicion"]}}</p>
             </div>
           </div>
           <div class="subtitle-content">
@@ -96,7 +95,7 @@
                 </td>
                 <td width="50%">
                   <div class="definition-graph_content">
-                    <div class="graphics-content">
+                    <div class="graphics-content-3">
                         <canvas id="myChart3-{{$index}}" width="200" height="200"></canvas>
                     </div>
                   </div>
@@ -113,17 +112,6 @@
               <td class="table-divisor_gap"></td>
               <td class="table-divisor_right_header" colspan="2">Resultado</td>
             </tr>
-            @foreach ($perfil_ideal_competencia as $perfil_ideal)
-            <tr>
-              <td class="table-divisor_left_aside">
-                {{ $perfil_ideal["evaluacion"] }}
-              </td>
-              <td class="table-divisor_left_value">{{ $perfil_ideal["rasgo"] }}</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">{{ $perfil_ideal["resultado"] }}</td>
-              <td class="table-divisor_right_value">{{ $perfil_ideal["detalle"] }}</td>
-            </tr>
-            @endforeach
             <!--<tr>
               <td class="table-divisor_left_aside" rowspan="2">
                 Estilo Conductual<br> Prueba PPA
@@ -139,10 +127,23 @@
               <td class="table-divisor_right_aside">Fortaleza</td>
               <td class="table-divisor_right_value">El gusto que tienes por escuchar a otras personas, generará un impacto positivo y de apertura en tu audiencia</td>
             </tr>-->
+            @foreach ($perfil_ideal_competencia as $perfil_ideal)
+            <tr>
+              @if ($loop->first)
+              <td class="table-divisor_left_aside" rowspan="{{count($perfil_ideal_competencia)}}">
+                {{ $perfil_ideal["evaluacion"] }}
+              </td>
+              @endif
+              <td class="table-divisor_left_value">{{ $perfil_ideal["rasgo"] }}</td>
+              <td class="table-divisor_gap"></td>
+              <td class="table-divisor_right_aside">{{ $perfil_ideal["resultado"] }}</td>
+              <td class="table-divisor_right_value">{{ $perfil_ideal["detalle"] }}</td>
+            </tr>
+            @endforeach
           </table>
         </div>
       </div>
-      {{ $index = $index + 1 }}
+      <?php $index = $index + 1; ?>
       @endforeach
     </div>
 
@@ -150,8 +151,13 @@
       @page {
         margin: 0;
       }
+      h2, h3, h4{
+        margin-top:0.2rem;
+        margin-bottom:0.2rem;
+      }
       #contenedor_pdf{
-        width:850px;
+        width:850px !important;
+        min-width:850px;
         margin: auto;
       }
       .page_break {
@@ -164,7 +170,7 @@
       }
       .hero {
         text-align: center;
-        padding: 12px 12px 16px;
+        padding: 11px 12px 16px;
       }
       .title-main {
         font-weight: bold;
@@ -210,12 +216,16 @@
         font-weight: bold;
         margin-bottom: 0;
         line-height: 1;
+        font-size:1.1rem;
+      }
+      .parrafo-4 {
+        font-size:13px;
       }
       .body {
         padding: 12px;
       }
       .table-1 {
-        font-size: 13px;
+        font-size: 12px;
         width: 100%;
         border-collapse: collapse;
       }
@@ -267,7 +277,7 @@
         flex-direction: column;
       }
       .definition-col_item {
-        padding: 40px 24px;
+        padding: 20px 24px;
       }
       .personality-icon {
         vertical-align: middle;
@@ -279,7 +289,7 @@
       .table-divisor {
         width: 100%;
         border-collapse: collapse;
-        font-size: 13px;
+        font-size: 11px;
       }
       .table-divisor td {
         border: 1px solid #bbb;
@@ -326,128 +336,28 @@
         margin: 0 auto;
         width: 300px;
       }
+      .graphics-content-2 {
+        margin: 0 auto;
+        width: 300px;
+      }
+      .graphics-content-3 {
+        margin: 0 auto;
+        width: 200px;
+      }
       
     </style>
     <script>
-      var ctxPie = document.getElementById("myChart").getContext("2d", { willReadFrequently: true });
-      new Chart(ctxPie, {
-        type: "pie",
-        data: {
-          labels: ["NIVEL 1", "NIVEL 2", "NIVEL 3"],
-          datasets: [{
-            // label: "# of Votes",
-            data: [{{$grafica1["total_nivel1"]}}, {{$grafica1["total_nivel2"]}}, {{$grafica1["total_nivel3"]}}],
-            backgroundColor: ["#0d5393", "#00afaa", "#5693cb"],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: "top",
-            },
-            labels: {
-                render: 'percentage',
-                fontColor: ['green', 'white', 'red'],
-                precision: 3
-            },
-            title: {
-              display: false,
-            }
-          }
-        }
-      });
-
-      
-      {{ $indexJS = 2 }}
-      @foreach ($report["perfil_ideal"] as $key=>$perfil_ideal_competencia)
-      
-        var circuference = 150; // deg
-        var bgColor = ["#00afaa", "#00afaa", "#00afaa"];
-          if('{{$report["resultados_generales"][$key]["nivel"]}}' == 1 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '1' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 1'){
-              bgColor = ["#0d5393", "#00afaa", "#00afaa"];
-          }else if('{{$report["resultados_generales"][$key]["nivel"]}}' == 2 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '2' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 2'){
-              bgColor = ["#0d5393", "#0d5393", "#00afaa"];
-          }else if('{{$report["resultados_generales"][$key]["nivel"]}}' == 3 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '3' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 3'){
-              bgColor = ["#0d5393", "#0d5393", "#0d5393"];
-          }
-          var data = {
-          labels: ["Nivel 1", "Nivel 2", "Nivel 3"],
-          datasets: [
-              {
-                  data: [1, 1, 1],
-                  backgroundColor: bgColor
-              }
-          ]
-          };
-
-          var config = {
-              type: "doughnut",
-              data: data,
-              options: {   
-                  reponsive: true,
-                  maintainAspectRatio: false,
-                  rotation: (circuference / 2) * -1,
-                  circumference: circuference,
-                  cutout: "80%",
-                  borderWidth: 0,
-                  borderRadius: function (context, options) {
-                      const index = context.dataIndex;
-                      let radius = {};
-                      if (index == 0) {
-                          radius.innerStart = 50;
-                          radius.outerStart = 50;
-                      }
-                      if (index === context.dataset.data.length - 1) {
-                          radius.innerEnd = 50;
-                          radius.outerEnd = 50;
-                      }
-                      return radius;
-                  },
-                  plugins: {
-                      title: false,
-                      subtitle: false,
-                      legend: true
-                  },
-                  animation: {
-                      onComplete: function () {
-                          var canvas = document.getElementById("myChart2-{{$indexJS}}");
-                          var ctx = canvas.getContext('2d');
-                          var cw = canvas.offsetWidth;
-                          var ch = canvas.offsetHeight;
-                          var cx = cw / 2;
-                          var cy = ch - (ch / 10);
-
-                          ctx.translate(cx, cy);
-                          ctx.rotate((-45 * Math.PI / 180));
-                          ctx.beginPath();
-                          ctx.moveTo(0, -5);
-                          ctx.lineTo(150, 0);
-                          ctx.lineTo(0, 5);
-                          ctx.fillStyle = 'rgba(0, 76, 0, 0.8)';
-                          ctx.fill();
-                          ctx.rotate(-(-45 * Math.PI / 180));
-                          ctx.translate(-cx, -cy);
-                          ctx.beginPath();
-                          ctx.arc(cx, cy, 7, 0, Math.PI * 2);
-                          ctx.fill();
-                          //drawNeedle(150, -45 * Math.PI / 180);
-                      }
-                  }
-              }
-          };
-          var ctxSpeed{{$indexJS}} = new Chart("myChart2-{{$indexJS}}", config);
-
-        var ctxDona{{$indexJS}} = document.getElementById("myChart3-{{$indexJS}}").getContext("2d", { willReadFrequently: true });
-        new Chart(ctxDona{{$indexJS}}, {
-          type: "doughnut",
+      $( document ).ready(function() {
+          
+        var ctxPie = document.getElementById("myChart").getContext("2d", { willReadFrequently: true });
+        new Chart(ctxPie, {
+          type: "pie",
           data: {
-            labels: ["Fortalezas {{$grafica3[$key]['fortalezas_porc']}}%", "Oportunidades de Mejora {{$grafica3[$key]['oportunidades_porc']}}%"],
+            labels: ["NIVEL 1", "NIVEL 2", "NIVEL 3"],
             datasets: [{
               // label: "# of Votes",
-              data: [{{$grafica3[$key]["fortalezas"]}}, {{$grafica3[$key]["oportunidades"]}}],
-              backgroundColor: ["#0d5393", "#00afaa"],
+              data: [{{$grafica1["total_nivel1"]}}, {{$grafica1["total_nivel2"]}}, {{$grafica1["total_nivel3"]}}],
+              backgroundColor: ["#0d5393", "#00afaa", "#5693cb"],
               borderWidth: 0
             }]
           },
@@ -455,16 +365,12 @@
             responsive: true,
             plugins: {
               legend: {
-                position: "bottom",
+                position: "top",
               },
-              datalabels: {
-                  color: 'white',
-                  textAlign: 'center',
-                  formatter: function(value, ctx) {
-                  var index = ctx.dataIndex;
-                  var label = ctx.chart.data.labels[index];
-                  return label + '\n' + value;
-                  }
+              labels: {
+                  render: 'percentage',
+                  fontColor: ['green', 'white', 'red'],
+                  precision: 3
               },
               title: {
                 display: false,
@@ -472,83 +378,200 @@
             }
           }
         });
-      {{ $indexJS = $indexJS + 1 }}
-      @endforeach
 
+        
+        @foreach ($report["perfil_ideal"] as $key=>$perfil_ideal_competencia)
+        
+          var circuference = 150; // deg
+          var bgColor = ["#00afaa", "#00afaa", "#00afaa"];
+            if('{{$report["resultados_generales"][$key]["nivel"]}}' == 1 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '1' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 1'){
+                bgColor = ["#0d5393", "#00afaa", "#00afaa"];
+            }else if('{{$report["resultados_generales"][$key]["nivel"]}}' == 2 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '2' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 2'){
+                bgColor = ["#0d5393", "#0d5393", "#00afaa"];
+            }else if('{{$report["resultados_generales"][$key]["nivel"]}}' == 3 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '3' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 3'){
+                bgColor = ["#0d5393", "#0d5393", "#0d5393"];
+            }
+            var data = {
+            labels: ["Nivel 1", "Nivel 2", "Nivel 3"],
+            datasets: [
+                {
+                    data: [1, 1, 1],
+                    backgroundColor: bgColor
+                }
+            ]
+            };
 
-      
+            var config = {
+                type: "doughnut",
+                data: data,
+                options: {   
+                    reponsive: true,
+                    maintainAspectRatio: false,
+                    rotation: (circuference / 2) * -1,
+                    circumference: circuference,
+                    cutout: "80%",
+                    borderWidth: 0,
+                    borderRadius: function (context, options) {
+                        const index = context.dataIndex;
+                        let radius = {};
+                        if (index == 0) {
+                            radius.innerStart = 50;
+                            radius.outerStart = 50;
+                        }
+                        if (index === context.dataset.data.length - 1) {
+                            radius.innerEnd = 50;
+                            radius.outerEnd = 50;
+                        }
+                        return radius;
+                    },
+                    plugins: {
+                        title: false,
+                        subtitle: false,
+                        legend: {
+                            position: "bottom",
+                            align: "middle"
+                        }
+                    },
+                    animation: {
+                        onComplete: function () {
+                            var canvas = document.getElementById("myChart2-{{$indexJS}}");
+                            var ctx = canvas.getContext('2d');
+                            var cw = canvas.offsetWidth;
+                            var ch = canvas.offsetHeight;
+                            var cx = cw / 3;
+                            var cy = ch - (ch / 3.5);
 
-      window.jsPDF = window.jspdf.jsPDF;
+                            ctx.translate(cx, cy);
+                            ctx.rotate((-45 * Math.PI / 180));
+                            ctx.beginPath();
+                            ctx.moveTo(0, -5);
+                            ctx.lineTo(100, 0);
+                            ctx.lineTo(0, 5);
+                            ctx.fillStyle = 'rgba(0, 76, 0, 0.8)';
+                            ctx.fill();
+                            ctx.rotate(-(-45 * Math.PI / 180));
+                            ctx.translate(-cx, -cy);
+                            ctx.beginPath();
+                            ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+                            ctx.fill();
+                            //drawNeedle(150, -45 * Math.PI / 180);
+                        }
+                    }
+                }
+            };
+            var ctxSpeed{{$indexJS}} = new Chart("myChart2-{{$indexJS}}", config);
 
-      let doc_width = 5.4;
-      //let doc_height = 8.27;
-      let doc_height = 11.69;
-      let aspect = doc_height / doc_width;
-      let dpi = 120; // targeting ~1200 window width
-      let img_width = doc_width * dpi;
-      let img_height = doc_height * dpi;
-      let win_width = img_width;
-      let win_height = img_height;
-
-      // https://html2canvas.hertzen.com/configuration
-      let html2canvasOpts = {
-        scale: img_width/win_width,   // equals 1
-        width: img_width,
-        height: img_height,
-        windowWidth: win_width,
-        windowHeight: win_height,
-      };
-
-      // https://rawgit.com/MrRio/jsPDF/master/docs/jsPDF.html
-      let jsPDFOpts = {
-        orientation: 'portrait',
-        unit: 'in',
-        format: 'A4'
-      };
-
-      setTimeout(function(){
-        var pdf = new jsPDF(jsPDFOpts);
-        var div_anterior = 0;
-        var slides = document.getElementsByClassName("pdf-page");
-        for (var i = 0; i < slides.length; i++) {
-          var pdfWidth = pdf.internal.pageSize.getWidth();
-          var pdfHeight = 0;
-          console.log("#"+slides[i].id);
-          html2canvas(document.querySelector("#"+slides[i].id)).then(canvas => {
-              var img = canvas.toDataURL("image/jpeg");
-              const imgProps= pdf.getImageProperties(img);
-              pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-              //document.getElementById("contenedor_pdf").style.display = 'none';
-              pdf.addImage(img, 'PNG', 0, div_anterior, pdfWidth, pdfHeight);
-              
-              //if(i < slides.length){
-                pdf.addPage('A4', 'portrait');
-              //}
+          var ctxDona{{$indexJS}} = document.getElementById("myChart3-{{$indexJS}}").getContext("2d", { willReadFrequently: true });
+          new Chart(ctxDona{{$indexJS}}, {
+            type: "doughnut",
+            data: {
+              labels: ["Fortalezas {{$grafica3[$key]['fortalezas_porc']}}%", "Oportunidades de Mejora {{$grafica3[$key]['oportunidades_porc']}}%"],
+              datasets: [{
+                // label: "# of Votes",
+                data: [{{$grafica3[$key]["fortalezas"]}}, {{$grafica3[$key]["oportunidades"]}}],
+                backgroundColor: ["#0d5393", "#00afaa"],
+                borderWidth: 0
+              }]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                    position: "bottom"
+                },
+                datalabels: {
+                    color: 'white',
+                    textAlign: 'center',
+                    formatter: function(value, ctx) {
+                    var index = ctx.dataIndex;
+                    var label = ctx.chart.data.labels[index];
+                    return label + '\n' + value;
+                    }
+                },
+                title: {
+                  display: false,
+                }
+              }
+            }
           });
-          div_anterior = pdfHeight;
-        }
-        setTimeout(function(){ 
-            //pdf.save('reporte_candidato.pdf'); 
-            var blob = pdf.output('blob');
-            console.log(blob);
-            var formData = new FormData();
-            formData.append('pdf', blob);
-            formData.append('name', '{{ $name }}');
-            formData.append('csrf_token', '{{ csrf_token() }}');
-            let fetchRes = fetch('<?php echo route('pdf.uploadblob'); ?>?name={{$name}}', {
-                method: "POST", 
-                body: formData 
+        <?php $indexJS = $indexJS + 1; ?>
+        @endforeach
+
+
+        
+
+        window.jsPDF = window.jspdf.jsPDF;
+
+        let doc_width = 5.4;
+        //let doc_height = 8.27;
+        let doc_height = 11.69;
+        let aspect = doc_height / doc_width;
+        let dpi = 120; // targeting ~1200 window width
+        let img_width = doc_width * dpi;
+        let img_height = doc_height * dpi;
+        let win_width = img_width;
+        let win_height = img_height;
+
+        // https://html2canvas.hertzen.com/configuration
+        let html2canvasOpts = {
+          scale: img_width/win_width,   // equals 1
+          width: img_width,
+          height: img_height,
+          windowWidth: win_width,
+          windowHeight: win_height,
+        };
+
+        // https://rawgit.com/MrRio/jsPDF/master/docs/jsPDF.html
+        let jsPDFOpts = {
+          orientation: 'portrait',
+          unit: 'in',
+          format: 'A4'
+        };
+
+        setTimeout(function(){
+          var pdf = new jsPDF(jsPDFOpts);
+          var div_anterior = 0;
+          var slides = document.getElementsByClassName("pdf-page");
+          for (var i = 0; i < slides.length; i++) {
+            var pdfWidth = pdf.internal.pageSize.getWidth();
+            var pdfHeight = 0;
+            console.log("#"+slides[i].id);
+            html2canvas(document.querySelector("#"+slides[i].id)).then(canvas => {
+                var img = canvas.toDataURL("image/jpeg");
+                const imgProps= pdf.getImageProperties(img);
+                pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+                //document.getElementById("contenedor_pdf").style.display = 'none';
+                pdf.addImage(img, 'PNG', 0, div_anterior, pdfWidth, pdfHeight);
+                
+                //if(i < slides.length){
+                  pdf.addPage('A4', 'portrait');
+                //}
             });
-            fetchRes.then(res => 
-                    res.json()).then(d => { 
-                        window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
-                    }) 
-          //window.close();
-        }, 1500);
-      }, 1500);
+            div_anterior = pdfHeight;
+          }
+          setTimeout(function(){ 
+              //pdf.save('reporte_candidato.pdf'); 
+              var blob = pdf.output('blob');
+              console.log(blob);
+              var formData = new FormData();
+              formData.append('pdf', blob);
+              formData.append('name', '{{ $name }}');
+              formData.append('csrf_token', '{{ csrf_token() }}');
+              let fetchRes = fetch('<?php echo route('pdf.uploadblob'); ?>?name={{$name}}', {
+                  method: "POST", 
+                  body: formData 
+              });
+              fetchRes.then(res => 
+                      res.json()).then(d => { 
+                          //window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
+                      }) 
+            //window.close();
+          }, 1750);
+        }, 1750);
+      });
     </script>
-            </div>
-            <!-- /.col-->
-          </div>
-          <!-- /.row-->
-@include('layouts.footer')
+    </div>
+    <!-- /.col-->
+  </div>
+  <!-- /.row-->
+@include('layouts.footerPDF')
