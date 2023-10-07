@@ -563,7 +563,7 @@
               });
               fetchRes.then(res => 
                       res.json()).then(d => { 
-                          //window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
+                          window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
                       }) 
             //window.close();
           }, 1750);
