@@ -132,7 +132,7 @@ class PDFController extends Controller
                     'detalle' => $rowProperties["detalle"],
                     'competencia' => $rowProperties["competencia"]
                 ];
-                $arrAux['perfil_ideal'][$rowProperties["competencia"]][] = $data;
+                $arrAux['perfil_ideal'][$rowProperties["competencia"]][$rowProperties["evaluación"]][] = $data;
                 session(['report' => $arrAux]);
             }
         });
@@ -163,14 +163,17 @@ class PDFController extends Controller
 
             $total_fortalezas = 0;$total_oportunidades = 0;
 
-            //var_dump($competenciasArr);
-            for($i=0;$i<count($competenciasArr);$i++){
+            foreach ($competenciasArr as $key2=>$evaluacionArr) {
+            //var_dump($competenciaObj);
+            //for($i=0;$i<count($competenciasArr);$i++){
+                foreach ($evaluacionArr as $key3=>$evaluacionObj) {
                 
-                if(strtolower($competenciasArr[$i]["resultado"]) == "fortaleza"){
-                    $total_fortalezas++;
-                }
-                if(strtolower($competenciasArr[$i]["resultado"]) == "oportunidad de mejora"){
-                    $total_oportunidades++;
+                    if(strtolower($evaluacionObj["resultado"]) == "fortaleza"){
+                        $total_fortalezas++;
+                    }
+                    if(strtolower($evaluacionObj["resultado"]) == "oportunidad de mejora"){
+                        $total_oportunidades++;
+                    }
                 }
             }
             $grafica3[$key]["total"] = $total_fortalezas + $total_oportunidades;
@@ -180,7 +183,7 @@ class PDFController extends Controller
             $grafica3[$key]["oportunidades_porc"] = round((100 * $total_oportunidades / ($total_fortalezas + $total_oportunidades)), 2);
         }
           
-        //var_dump($report_data["resultados_generales"]);
+        //var_dump($report_data["perfil_ideal"]);
         $iterator_perfil_ideal = 0;
         if(count($report_data["perfil_ideal"]) > 5){ $iterator_perfil_ideal = 1; }
         return view('pdf.usil', ['name' => $document->original_file, 'report' => $report_data, 'grafica1' => $grafica1, 'grafica3' => $grafica3, 'iterator_perfil_ideal' => $iterator_perfil_ideal, 'index' => 2, 'indexJS' => 2 ]);

@@ -127,18 +127,22 @@
               <td class="table-divisor_right_aside">Fortaleza</td>
               <td class="table-divisor_right_value">El gusto que tienes por escuchar a otras personas, generará un impacto positivo y de apertura en tu audiencia</td>
             </tr>-->
+            <?php $last_evaluacion = ""; ?>
             @foreach ($perfil_ideal_competencia as $perfil_ideal)
-            <tr>
-              @if ($loop->first)
-              <td class="table-divisor_left_aside" rowspan="{{count($perfil_ideal_competencia)}}">
-                {{ $perfil_ideal["evaluacion"] }}
-              </td>
-              @endif
-              <td class="table-divisor_left_value">{{ $perfil_ideal["rasgo"] }}</td>
-              <td class="table-divisor_gap"></td>
-              <td class="table-divisor_right_aside">{{ $perfil_ideal["resultado"] }}</td>
-              <td class="table-divisor_right_value">{{ $perfil_ideal["detalle"] }}</td>
-            </tr>
+              @foreach ($perfil_ideal as $evaluacionObj)
+              <tr>
+                @if ($evaluacionObj["evaluacion"] != $last_evaluacion)
+                <td class="table-divisor_left_aside" rowspan="{{count($perfil_ideal)}}">
+                  {{ $evaluacionObj["evaluacion"] }}
+                </td>
+                @endif
+                <td class="table-divisor_left_value">{{ $evaluacionObj["rasgo"] }}</td>
+                <td class="table-divisor_gap"></td>
+                <td class="table-divisor_right_aside">{{ $evaluacionObj["resultado"] }}</td>
+                <td class="table-divisor_right_value">{{ $evaluacionObj["detalle"] }}</td>
+              </tr>
+              <?php $last_evaluacion = $evaluacionObj["evaluacion"]; ?>
+              @endforeach
             @endforeach
           </table>
         </div>
