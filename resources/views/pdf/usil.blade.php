@@ -342,7 +342,7 @@
       }
       .graphics-content-2 {
         margin: 0 auto;
-        width: 300px;
+        width: 200px;
       }
       .graphics-content-3 {
         margin: 0 auto;
@@ -387,16 +387,16 @@
         @foreach ($report["perfil_ideal"] as $key=>$perfil_ideal_competencia)
         
           var circuference = 150; // deg
-          var bgColor = ["#00afaa", "#00afaa", "#00afaa"];
-            if('{{$report["resultados_generales"][$key]["nivel"]}}' == 1 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '1' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 1'){
+          var bgColor = ["#0d5393", "#00afaa", "#5693cb"];
+            /*if('{{$report["resultados_generales"][$key]["nivel"]}}' == 1 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '1' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 1'){
                 bgColor = ["#0d5393", "#00afaa", "#00afaa"];
             }else if('{{$report["resultados_generales"][$key]["nivel"]}}' == 2 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '2' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 2'){
                 bgColor = ["#0d5393", "#0d5393", "#00afaa"];
             }else if('{{$report["resultados_generales"][$key]["nivel"]}}' == 3 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '3' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 3'){
                 bgColor = ["#0d5393", "#0d5393", "#0d5393"];
-            }
+            }*/
             var data = {
-            labels: ["Nivel 1", "Nivel 2", "Nivel 3"],
+            labels: ["1", "2", "3"],
             datasets: [
                 {
                     data: [1, 1, 1],
@@ -442,14 +442,14 @@
                             var ctx = canvas.getContext('2d');
                             var cw = canvas.offsetWidth;
                             var ch = canvas.offsetHeight;
-                            var cx = cw / 3;
-                            var cy = ch - (ch / 3.5);
+                            var cx = cw / 2;
+                            var cy = ch - (ch / 2.5);
 
                             ctx.translate(cx, cy);
                             ctx.rotate((-45 * Math.PI / 180));
                             ctx.beginPath();
                             ctx.moveTo(0, -5);
-                            ctx.lineTo(100, 0);
+                            ctx.lineTo(60, 0);
                             ctx.lineTo(0, 5);
                             ctx.fillStyle = 'rgba(0, 76, 0, 0.8)';
                             ctx.fill();
@@ -500,9 +500,6 @@
           });
         <?php $indexJS = $indexJS + 1; ?>
         @endforeach
-
-
-        
 
         window.jsPDF = window.jspdf.jsPDF;
 
@@ -567,7 +564,7 @@
               });
               fetchRes.then(res => 
                       res.json()).then(d => { 
-                          window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
+                          //window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
                       }) 
             //window.close();
           }, 1750);
