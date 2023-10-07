@@ -98,10 +98,6 @@ class PDFController extends Controller
         $rows->each(function(array $rowProperties) {
             $arrAux = session('report', []);
             if(count($arrAux) === 0){
-                /*$data['info_global']['candidato'] = $rowProperties["candidato"];
-                $data['info_global']['carrera'] = $rowProperties["carrera"];
-                $data['info_global']['facultad'] = $rowProperties["facultad"];
-                $data['info_global']['nivel_promedio'] = $rowProperties["nivel_promedio"];*/
                 $data = [
                     'candidato' => $rowProperties["candidato"],
                     'carrera' => $rowProperties["carrera"],
@@ -118,23 +114,25 @@ class PDFController extends Controller
                 'nivel' => $rowProperties["nivel"],
                 'definicion' => $rowProperties["definicion"]
             ];
-            $arrAux['resultados_generales'][] = $data;
+            $arrAux['resultados_generales'][$rowProperties["competencia"]] = $data;
             session(['report' => $arrAux]);
         });
         $rows = SimpleExcelReader::create(Storage::disk('local')->path("originales/".$document->original_file), 'xlsx')->trimHeaderRow()
         ->fromSheetName("Resultado2")
-        ->useHeaders(['candidato','carrera','facultad','nivel_promedio','Evaluación','Rasgo','Resultado','Detalle'])
+        ->useHeaders(['candidato','carrera','facultad','nivel_promedio','evaluación','rasgo','resultado','detalle','competencia'])
         ->getRows();
         $rows->each(function(array $rowProperties) {
-            if($rowProperties["Evaluación"] != ""){
+            if($rowProperties["evaluación"] != ""){
                 $arrAux = session('report', []);
                 $data = [
-                    'evaluacion' => $rowProperties["Evaluación"],
-                    'rasgo' => $rowProperties["Rasgo"],
-                    'resultado' => $rowProperties["Resultado"],
-                    'detalle' => $rowProperties["Detalle"]
+                    'nivel_promedio' => $rowProperties["nivel_promedio"],
+                    'evaluacion' => $rowProperties["evaluación"],
+                    'rasgo' => $rowProperties["rasgo"],
+                    'resultado' => $rowProperties["resultado"],
+                    'detalle' => $rowProperties["detalle"],
+                    'competencia' => $rowProperties["competencia"]
                 ];
-                $arrAux['perfil_ideal'][] = $data;
+                $arrAux['perfil_ideal'][$rowProperties["competencia"]][] = $data;
                 session(['report' => $arrAux]);
             }
         });
@@ -142,14 +140,15 @@ class PDFController extends Controller
 
 
         $total_nivel1 = 0;$total_nivel2 = 0;$total_nivel3 = 0;
-        for($i=0;$i<count($report_data["resultados_generales"]);$i++){
-            if(strtolower($report_data["resultados_generales"][$i]["nivel"]) == "nivel 1" || $report_data["resultados_generales"][$i]["nivel"] === 1){
+        foreach ($report_data["resultados_generales"] as $key=>$resultados_generales) {
+        //for($i=0;$i<count($report_data["resultados_generales"]);$i++){
+            if(strtolower($resultados_generales["nivel"]) == "nivel 1" || $resultados_generales["nivel"] === 1){
                 $total_nivel1++;
             }
-            if(strtolower($report_data["resultados_generales"][$i]["nivel"]) == "nivel 2" || $report_data["resultados_generales"][$i]["nivel"] === 2){
+            if(strtolower($resultados_generales["nivel"]) == "nivel 2" || $resultados_generales["nivel"] === 2){
                 $total_nivel2++;
             }
-            if(strtolower($report_data["resultados_generales"][$i]["nivel"]) == "nivel 3" || $report_data["resultados_generales"][$i]["nivel"] === 3){
+            if(strtolower($resultados_generales["nivel"]) == "nivel 3" || $resultados_generales["nivel"] === 3){
                 $total_nivel3++;
             }
         }
@@ -159,24 +158,32 @@ class PDFController extends Controller
             'total_nivel3' => $total_nivel3,
         ];
 
-        $total_fortalezas = 0;$total_oportunidades = 0;
-        for($i=0;$i<count($report_data["perfil_ideal"]);$i++){
-            if(strtolower($report_data["perfil_ideal"][$i]["resultado"]) == "fortaleza"){
-                $total_fortalezas++;
+        $grafica3 = [];
+        foreach ($report_data["perfil_ideal"] as $key=>$competenciasArr) {
+
+            $total_fortalezas = 0;$total_oportunidades = 0;
+
+            //var_dump($competenciasArr);
+            for($i=0;$i<count($competenciasArr);$i++){
+                
+                if(strtolower($competenciasArr[$i]["resultado"]) == "fortaleza"){
+                    $total_fortalezas++;
+                }
+                if(strtolower($competenciasArr[$i]["resultado"]) == "oportunidad de mejora"){
+                    $total_oportunidades++;
+                }
             }
-            if(strtolower($report_data["perfil_ideal"][$i]["resultado"]) == "oportunidad de mejora"){
-                $total_oportunidades++;
-            }
+            $grafica3[$key]["total"] = $total_fortalezas + $total_oportunidades;
+            $grafica3[$key]["fortalezas"] = $total_fortalezas;
+            $grafica3[$key]["oportunidades"] = $total_oportunidades;
+            $grafica3[$key]["fortalezas_porc"] = round((100 * $total_fortalezas / ($total_fortalezas + $total_oportunidades)), 2);
+            $grafica3[$key]["oportunidades_porc"] = round((100 * $total_oportunidades / ($total_fortalezas + $total_oportunidades)), 2);
         }
-        $grafica3 = [
-            'fortalezas' => $total_fortalezas,
-            'oportunidades' => $total_oportunidades,
-            'total' => $total_fortalezas + $total_oportunidades,
-            'fortalezas_porc' => round((100 * $total_fortalezas / ($total_fortalezas + $total_oportunidades)), 2),
-            'oportunidades_porc' => round((100 * $total_oportunidades / ($total_fortalezas + $total_oportunidades)), 2)
-        ];
           
-        return view('pdf.usil', ['name' => $document->original_file, 'report' => $report_data, 'grafica1' => $grafica1, 'grafica3' => $grafica3 ]);
+        //var_dump($report_data["resultados_generales"]);
+        $iterator_perfil_ideal = 0;
+        if(count($report_data["perfil_ideal"]) > 5){ $iterator_perfil_ideal = 1; }
+        return view('pdf.usil', ['name' => $document->original_file, 'report' => $report_data, 'grafica1' => $grafica1, 'grafica3' => $grafica3, 'iterator_perfil_ideal' => $iterator_perfil_ideal ]);
         //return redirect()->action([PDFController::class, 'importar']);
     }
     

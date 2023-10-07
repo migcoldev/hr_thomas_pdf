@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>USIL</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script>
+      
+    </script>
     <style>
       @page {
         margin: 0;
@@ -243,9 +249,11 @@
           </div>
         </div>
       </div>
-      <div id="page-2" class="page-2 page_break pdf-page">
+      <?php $index = 2; ?>
+      @foreach ($report["perfil_ideal"] as $key=>$perfil_ideal_competencia)
+      <div id="page-{{$index}}" class="page-{{$index}} page_break pdf-page">
         <div class="title-content">
-          <h2 class="title">COMUNICACIÓN INTEGRAL</h2>
+          <h2 class="title">{{$key}}</h2>
         </div>
         <div class="body">
           <div class="subtitle-content">
@@ -255,12 +263,12 @@
             <div class="definition-header">
                 
                 <div class="graphics-content">
-                        <canvas id="myChart2" width="150" height="150"></canvas>
+                        <canvas id="myChart2-{{$index}}" width="150" height="150"></canvas>
                     </div>
             </div>
             <div class="definition-body">
               <h4 class="subtitle-4">Definición:</h4>
-              <p>Redacta textos con propiedad valorando su entorno y todo aquello relacionado a este con la finalidad de ser un crítico activo de los cambios, innovaciones y transformaciones a todo nivel.</p>
+              <p>{{$report["resultados_generales"][$key]["definicion"]}}</p>
             </div>
           </div>
           <div class="subtitle-content">
@@ -282,7 +290,7 @@
                 <td width="50%">
                   <div class="definition-graph_content">
                     <div class="graphics-content">
-                        <canvas id="myChart3" width="200" height="200"></canvas>
+                        <canvas id="myChart3-{{$index}}" width="200" height="200"></canvas>
                     </div>
                   </div>
                 </td>
@@ -298,7 +306,7 @@
               <td class="table-divisor_gap"></td>
               <td class="table-divisor_right_header" colspan="2">Resultado</td>
             </tr>
-            @foreach ($report["perfil_ideal"] as $perfil_ideal)
+            @foreach ($perfil_ideal_competencia as $perfil_ideal)
             <tr>
               <td class="table-divisor_left_aside">
                 {{ $perfil_ideal["evaluacion"] }}
@@ -327,14 +335,16 @@
           </table>
         </div>
       </div>
+      {{ $index = $index + 1 }}
+      @endforeach
     </div>
 
     <script>
-      var ctxPie = document.getElementById("myChart").getContext("2d");
+      var ctxPie = document.getElementById("myChart").getContext("2d", { willReadFrequently: true });
       new Chart(ctxPie, {
         type: "pie",
         data: {
-          labels: ["Nivel 1", "Nivel 2", "Nivel 3"],
+          labels: ["NIVEL 1", "NIVEL 2", "NIVEL 3"],
           datasets: [{
             // label: "# of Votes",
             data: [{{$grafica1["total_nivel1"]}}, {{$grafica1["total_nivel2"]}}, {{$grafica1["total_nivel3"]}}],
@@ -360,188 +370,193 @@
         }
       });
 
-      const circuference = 150; // deg
-      var bgColor = ["#00afaa", "#00afaa", "#00afaa"];
-        if('{{$report["nivel_promedio"]}}' == 1 || '{{$report["nivel_promedio"]}}' == '1' || '{{$report["nivel_promedio"]}}' == 'Nivel 1'){
-            bgColor = ["#0d5393", "#00afaa", "#00afaa"];
-        }else if('{{$report["nivel_promedio"]}}' == 2 || '{{$report["nivel_promedio"]}}' == '2' || '{{$report["nivel_promedio"]}}' == 'Nivel 2'){
-            bgColor = ["#0d5393", "#0d5393", "#00afaa"];
-        }else if('{{$report["nivel_promedio"]}}' == 3 || '{{$report["nivel_promedio"]}}' == '3' || '{{$report["nivel_promedio"]}}' == 'Nivel 3'){
-            bgColor = ["#0d5393", "#0d5393", "#0d5393"];
-        }
-        const data = {
-        labels: ["Nivel 1", "Nivel 2", "Nivel 3"],
-        datasets: [
-            {
-                data: [1, 1, 1],
-                backgroundColor: bgColor
-            }
-        ]
-        };
+      
+      {{ $indexJS = 2 }}
+      @foreach ($report["perfil_ideal"] as $key=>$perfil_ideal_competencia)
+      
+        var circuference = 150; // deg
+        var bgColor = ["#00afaa", "#00afaa", "#00afaa"];
+          if('{{$report["resultados_generales"][$key]["nivel"]}}' == 1 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '1' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 1'){
+              bgColor = ["#0d5393", "#00afaa", "#00afaa"];
+          }else if('{{$report["resultados_generales"][$key]["nivel"]}}' == 2 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '2' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 2'){
+              bgColor = ["#0d5393", "#0d5393", "#00afaa"];
+          }else if('{{$report["resultados_generales"][$key]["nivel"]}}' == 3 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '3' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 3'){
+              bgColor = ["#0d5393", "#0d5393", "#0d5393"];
+          }
+          var data = {
+          labels: ["Nivel 1", "Nivel 2", "Nivel 3"],
+          datasets: [
+              {
+                  data: [1, 1, 1],
+                  backgroundColor: bgColor
+              }
+          ]
+          };
 
-        const config = {
-            type: "doughnut",
-            data: data,
-            options: {   
-                reponsive: true,
-                maintainAspectRatio: false,
-                rotation: (circuference / 2) * -1,
-                circumference: circuference,
-                cutout: "80%",
-                borderWidth: 0,
-                borderRadius: function (context, options) {
-                    const index = context.dataIndex;
-                    let radius = {};
-                    if (index == 0) {
-                        radius.innerStart = 50;
-                        radius.outerStart = 50;
-                    }
-                    if (index === context.dataset.data.length - 1) {
-                        radius.innerEnd = 50;
-                        radius.outerEnd = 50;
-                    }
-                    return radius;
-                },
-                plugins: {
-                    title: false,
-                    subtitle: false,
-                    legend: true
-                },
-                /*animation: {
-                    onComplete: function () {
-                        var canvas = document.getElementById("myChart2");
-                        var ctx = canvas.getContext('2d');
-                        var cw = canvas.offsetWidth;
-                        var ch = canvas.offsetHeight;
-                        var cx = cw / 2;
-                        var cy = ch - (ch / 5);
+          var config = {
+              type: "doughnut",
+              data: data,
+              options: {   
+                  reponsive: true,
+                  maintainAspectRatio: false,
+                  rotation: (circuference / 2) * -1,
+                  circumference: circuference,
+                  cutout: "80%",
+                  borderWidth: 0,
+                  borderRadius: function (context, options) {
+                      const index = context.dataIndex;
+                      let radius = {};
+                      if (index == 0) {
+                          radius.innerStart = 50;
+                          radius.outerStart = 50;
+                      }
+                      if (index === context.dataset.data.length - 1) {
+                          radius.innerEnd = 50;
+                          radius.outerEnd = 50;
+                      }
+                      return radius;
+                  },
+                  plugins: {
+                      title: false,
+                      subtitle: false,
+                      legend: true
+                  },
+                  animation: {
+                      onComplete: function () {
+                          var canvas = document.getElementById("myChart2-{{$indexJS}}");
+                          var ctx = canvas.getContext('2d');
+                          var cw = canvas.offsetWidth;
+                          var ch = canvas.offsetHeight;
+                          var cx = cw / 2;
+                          var cy = ch - (ch / 10);
 
-                        ctx.translate(cx, cy);
-                        ctx.rotate((-45 * Math.PI / 180));
-                        ctx.beginPath();
-                        ctx.moveTo(0, -5);
-                        ctx.lineTo(150, 0);
-                        ctx.lineTo(0, 5);
-                        ctx.fillStyle = 'rgba(0, 76, 0, 0.8)';
-                        ctx.fill();
-                        ctx.rotate(-(-45 * Math.PI / 180));
-                        ctx.translate(-cx, -cy);
-                        ctx.beginPath();
-                        ctx.arc(cx, cy, 7, 0, Math.PI * 2);
-                        ctx.fill();
-                        //drawNeedle(150, -45 * Math.PI / 180);
-                    }
-                }*/
-            }
-        };
+                          ctx.translate(cx, cy);
+                          ctx.rotate((-45 * Math.PI / 180));
+                          ctx.beginPath();
+                          ctx.moveTo(0, -5);
+                          ctx.lineTo(150, 0);
+                          ctx.lineTo(0, 5);
+                          ctx.fillStyle = 'rgba(0, 76, 0, 0.8)';
+                          ctx.fill();
+                          ctx.rotate(-(-45 * Math.PI / 180));
+                          ctx.translate(-cx, -cy);
+                          ctx.beginPath();
+                          ctx.arc(cx, cy, 7, 0, Math.PI * 2);
+                          ctx.fill();
+                          //drawNeedle(150, -45 * Math.PI / 180);
+                      }
+                  }
+              }
+          };
+          var ctxSpeed{{$indexJS}} = new Chart("myChart2-{{$indexJS}}", config);
 
-        const ctxSpeed = new Chart("myChart2", config);
-      var ctxDona = document.getElementById("myChart3").getContext("2d");
-      new Chart(ctxDona, {
-        type: "doughnut",
-        data: {
-          labels: ["Fortalezas {{$grafica3['fortalezas_porc']}}%", "Oportunidades de Mejora {{$grafica3['oportunidades_porc']}}%"],
-          datasets: [{
-            // label: "# of Votes",
-            data: [{{$grafica3["fortalezas"]}}, {{$grafica3["oportunidades"]}}],
-            backgroundColor: ["#0d5393", "#00afaa"],
-            borderWidth: 0
-          }]
-        },
-        options: {
-          responsive: true,
-          plugins: {
-            legend: {
-              position: "bottom",
-            },
-            datalabels: {
-                color: 'white',
-                textAlign: 'center',
-                formatter: function(value, ctx) {
-                var index = ctx.dataIndex;
-                var label = ctx.chart.data.labels[index];
-                return label + '\n' + value;
-                }
-            },
-            title: {
-              display: false,
+        var ctxDona{{$indexJS}} = document.getElementById("myChart3-{{$indexJS}}").getContext("2d", { willReadFrequently: true });
+        new Chart(ctxDona{{$indexJS}}, {
+          type: "doughnut",
+          data: {
+            labels: ["Fortalezas {{$grafica3[$key]['fortalezas_porc']}}%", "Oportunidades de Mejora {{$grafica3[$key]['oportunidades_porc']}}%"],
+            datasets: [{
+              // label: "# of Votes",
+              data: [{{$grafica3[$key]["fortalezas"]}}, {{$grafica3[$key]["oportunidades"]}}],
+              backgroundColor: ["#0d5393", "#00afaa"],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                position: "bottom",
+              },
+              datalabels: {
+                  color: 'white',
+                  textAlign: 'center',
+                  formatter: function(value, ctx) {
+                  var index = ctx.dataIndex;
+                  var label = ctx.chart.data.labels[index];
+                  return label + '\n' + value;
+                  }
+              },
+              title: {
+                display: false,
+              }
             }
           }
+        });
+      {{ $indexJS = $indexJS + 1 }}
+      @endforeach
+
+
+      
+
+      window.jsPDF = window.jspdf.jsPDF;
+
+      let doc_width = 5.4;
+      //let doc_height = 8.27;
+      let doc_height = 11.69;
+      let aspect = doc_height / doc_width;
+      let dpi = 120; // targeting ~1200 window width
+      let img_width = doc_width * dpi;
+      let img_height = doc_height * dpi;
+      let win_width = img_width;
+      let win_height = img_height;
+
+      // https://html2canvas.hertzen.com/configuration
+      let html2canvasOpts = {
+        scale: img_width/win_width,   // equals 1
+        width: img_width,
+        height: img_height,
+        windowWidth: win_width,
+        windowHeight: win_height,
+      };
+
+      // https://rawgit.com/MrRio/jsPDF/master/docs/jsPDF.html
+      let jsPDFOpts = {
+        orientation: 'portrait',
+        unit: 'in',
+        format: 'A4'
+      };
+
+      setTimeout(function(){
+        var pdf = new jsPDF(jsPDFOpts);
+        var div_anterior = 0;
+        var slides = document.getElementsByClassName("pdf-page");
+        for (var i = 0; i < slides.length; i++) {
+          var pdfWidth = pdf.internal.pageSize.getWidth();
+          var pdfHeight = 0;
+          console.log("#"+slides[i].id);
+          html2canvas(document.querySelector("#"+slides[i].id)).then(canvas => {
+              var img = canvas.toDataURL("image/jpeg");
+              const imgProps= pdf.getImageProperties(img);
+              pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+              //document.getElementById("contenedor_pdf").style.display = 'none';
+              pdf.addImage(img, 'PNG', 0, div_anterior, pdfWidth, pdfHeight);
+              
+              //if(i < slides.length){
+                pdf.addPage('A4', 'portrait');
+              //}
+          });
+          div_anterior = pdfHeight;
         }
-      });
+        setTimeout(function(){ 
+            //pdf.save('reporte_candidato.pdf'); 
+            var blob = pdf.output('blob');
+            console.log(blob);
+            var formData = new FormData();
+            formData.append('pdf', blob);
+            formData.append('name', '{{ $name }}');
+            formData.append('csrf_token', '{{ csrf_token() }}');
+            let fetchRes = fetch('<?php echo route('pdf.uploadblob'); ?>?name={{$name}}', {
+                method: "POST", 
+                body: formData 
+            });
+            fetchRes.then(res => 
+                    res.json()).then(d => { 
+                        //window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
+                    }) 
+          //window.close();
+        }, 2200);
+      }, 2200);
     </script>
   </body>
   </html>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script>
-  
-
-  window.jsPDF = window.jspdf.jsPDF;
-
-  let doc_width = 5.4;
-  //let doc_height = 8.27;
-  let doc_height = 11.69;
-  let aspect = doc_height / doc_width;
-  let dpi = 120; // targeting ~1200 window width
-  let img_width = doc_width * dpi;
-  let img_height = doc_height * dpi;
-  let win_width = img_width;
-  let win_height = img_height;
-
-  // https://html2canvas.hertzen.com/configuration
-  let html2canvasOpts = {
-    scale: img_width/win_width,   // equals 1
-    width: img_width,
-    height: img_height,
-    windowWidth: win_width,
-    windowHeight: win_height,
-  };
-
-  // https://rawgit.com/MrRio/jsPDF/master/docs/jsPDF.html
-  let jsPDFOpts = {
-    orientation: 'portrait',
-    unit: 'in',
-    format: 'A4'
-  };
-
-  setTimeout(function(){
-    var pdf = new jsPDF(jsPDFOpts);
-    var div_anterior = 0;
-    var slides = document.getElementsByClassName("pdf-page");
-    for (var i = 0; i < slides.length; i++) {
-      var pdfWidth = pdf.internal.pageSize.getWidth();
-      var pdfHeight = 0;
-      html2canvas(document.querySelector("#"+slides[i].id)).then(canvas => {
-          var img = canvas.toDataURL("image/jpeg");
-          const imgProps= pdf.getImageProperties(img);
-          pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
-          //document.getElementById("contenedor_pdf").style.display = 'none';
-          pdf.addImage(img, 'PNG', 0, div_anterior, pdfWidth, pdfHeight);
-          
-          //if(i < slides.length){
-            pdf.addPage('A4', 'portrait');
-          //}
-      });
-      div_anterior = pdfHeight;
-    }
-    setTimeout(function(){ 
-        //pdf.save('reporte_candidato.pdf'); 
-        var blob = pdf.output('blob');
-        console.log(blob);
-        var formData = new FormData();
-        formData.append('pdf', blob);
-        formData.append('name', '{{ $name }}');
-        formData.append('csrf_token', '{{ csrf_token() }}');
-        let fetchRes = fetch('<?php echo route('pdf.uploadblob'); ?>?name={{$name}}', {
-            method: "POST", 
-            body: formData 
-        });
-        fetchRes.then(res => 
-                res.json()).then(d => { 
-                    window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
-                }) 
-      //window.close();
-    }, 1200);
-  }, 1200);
-</script>
