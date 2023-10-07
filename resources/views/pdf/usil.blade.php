@@ -297,7 +297,7 @@
       }
       .table-divisor td {
         border: 1px solid #bbb;
-        padding: 8px;
+        padding: 4px;
       }
       .table-divisor_left_header {
         width: 280px;
@@ -357,14 +357,27 @@
         new Chart(ctxPie, {
           type: "pie",
           data: {
+            @if ($count_grafica1 === 1)
+            labels: ["NIVEL 1"],
+            @elseif ($count_grafica1 === 2)
+            labels: ["NIVEL 1", "NIVEL 2"],
+            @elseif ($count_grafica1 === 3)
             labels: ["NIVEL 1", "NIVEL 2", "NIVEL 3"],
+            @endif
             datasets: [{
               // label: "# of Votes",
-              data: [{{$grafica1["total_nivel1"]}}, {{$grafica1["total_nivel2"]}}, {{$grafica1["total_nivel3"]}}],
+              data: [{{implode(", ", $grafica1)}}],
+              @if ($count_grafica1 === 1)
+              backgroundColor: ["#0d5393"],
+              @elseif ($count_grafica1 === 2)
+              backgroundColor: ["#0d5393", "#00afaa"],
+              @elseif ($count_grafica1 === 3)
               backgroundColor: ["#0d5393", "#00afaa", "#5693cb"],
+              @endif
               borderWidth: 0
             }]
           },
+          plugins: [ChartDataLabels],
           options: {
             responsive: true,
             plugins: {
@@ -376,8 +389,19 @@
                   fontColor: ['green', 'white', 'red'],
                   precision: 3
               },
-              title: {
-                display: false,
+              datalabels: {
+                color: 'white',
+                textAlign: 'center',
+                font: {
+                  weight: 'bold',
+                  size: 16,
+                },
+                formatter: function(value, ctx) {
+                  var index = ctx.dataIndex;
+                  var label = ctx.chart.data.labels[index];
+                  //return label + '\n' + value;
+                  return label + '\n' + value +'%';
+                }
               }
             }
           }

@@ -152,11 +152,10 @@ class PDFController extends Controller
                 $total_nivel3++;
             }
         }
-        $grafica1 = [
-            'total_nivel1' => $total_nivel1,
-            'total_nivel2' => $total_nivel2,
-            'total_nivel3' => $total_nivel3,
-        ];
+        $grafica1 = [];
+        if($total_nivel1 > 0){ $grafica1[] = $total_nivel1 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3); }
+        if($total_nivel2 > 0){ $grafica1[] = $total_nivel2 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3); }
+        if($total_nivel3 > 0){ $grafica1[] = $total_nivel3 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3); }
 
         $grafica3 = [];
         foreach ($report_data["perfil_ideal"] as $key=>$competenciasArr) {
@@ -186,7 +185,8 @@ class PDFController extends Controller
         //var_dump($report_data["perfil_ideal"]);
         $iterator_perfil_ideal = 0;
         if(count($report_data["perfil_ideal"]) > 5){ $iterator_perfil_ideal = 1; }
-        return view('pdf.usil', ['name' => $document->original_file, 'report' => $report_data, 'grafica1' => $grafica1, 'grafica3' => $grafica3, 'iterator_perfil_ideal' => $iterator_perfil_ideal, 'index' => 2, 'indexJS' => 2 ]);
+
+        return view('pdf.usil', ['name' => $document->original_file, 'report' => $report_data, 'grafica1' => $grafica1, 'count_grafica1' => count($grafica1), 'grafica3' => $grafica3, 'iterator_perfil_ideal' => $iterator_perfil_ideal, 'index' => 2, 'indexJS' => 2 ]);
         //return redirect()->action([PDFController::class, 'importar']);
     }
     
