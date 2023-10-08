@@ -112,6 +112,7 @@ class PDFController extends Controller
             $data = [
                 'competencia' => $rowProperties["competencia"],
                 'nivel' => $rowProperties["nivel"],
+                'nivel_promedio' => $rowProperties["nivel_promedio"],
                 'definicion' => $rowProperties["definicion"]
             ];
             $arrAux['resultados_generales'][$rowProperties["competencia"]] = $data;
@@ -157,21 +158,28 @@ class PDFController extends Controller
         if($total_nivel2 > 0){ $grafica1[] = $total_nivel2 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3); }
         if($total_nivel3 > 0){ $grafica1[] = $total_nivel3 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3); }
 
-        $grafica3 = [];
+        $grafica2 = []; $grafica3 = [];
         foreach ($report_data["perfil_ideal"] as $key=>$competenciasArr) {
 
             $total_fortalezas = 0;$total_oportunidades = 0;
 
+            $grafica2[$key]["lista_fortalezas"] = [];
+            $grafica2[$key]["lista_oportunidades"] = [];
+            
             foreach ($competenciasArr as $key2=>$evaluacionArr) {
-            //var_dump($competenciaObj);
-            //for($i=0;$i<count($competenciasArr);$i++){
                 foreach ($evaluacionArr as $key3=>$evaluacionObj) {
                 
                     if(strtolower($evaluacionObj["resultado"]) == "fortaleza"){
                         $total_fortalezas++;
+                        if (!in_array($evaluacionObj["rasgo"], $grafica2[$key]["lista_fortalezas"])){
+                            $grafica2[$key]["lista_fortalezas"][] = $evaluacionObj["rasgo"];
+                        }
                     }
                     if(strtolower($evaluacionObj["resultado"]) == "oportunidad de mejora"){
                         $total_oportunidades++;
+                        if (!in_array($evaluacionObj["rasgo"], $grafica2[$key]["lista_oportunidades"])){
+                            $grafica2[$key]["lista_oportunidades"][] = $evaluacionObj["rasgo"];
+                        }
                     }
                 }
             }
@@ -182,11 +190,11 @@ class PDFController extends Controller
             $grafica3[$key]["oportunidades_porc"] = round((100 * $total_oportunidades / ($total_fortalezas + $total_oportunidades)), 2);
         }
           
-        //var_dump($report_data["perfil_ideal"]);
+        //var_dump($report_data["resultados_generales"]);
         $iterator_perfil_ideal = 0;
         if(count($report_data["perfil_ideal"]) > 5){ $iterator_perfil_ideal = 1; }
 
-        return view('pdf.usil', ['name' => $document->original_file, 'report' => $report_data, 'grafica1' => $grafica1, 'count_grafica1' => count($grafica1), 'grafica3' => $grafica3, 'iterator_perfil_ideal' => $iterator_perfil_ideal, 'index' => 2, 'indexJS' => 2 ]);
+        return view('pdf.usil', ['name' => $document->original_file, 'report' => $report_data, 'grafica1' => $grafica1, 'count_grafica1' => count($grafica1), 'grafica2' => $grafica2, 'grafica3' => $grafica3, 'iterator_perfil_ideal' => $iterator_perfil_ideal, 'index' => 2, 'indexJS' => 2 ]);
         //return redirect()->action([PDFController::class, 'importar']);
     }
     

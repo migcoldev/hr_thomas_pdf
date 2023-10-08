@@ -87,9 +87,20 @@
                   <div class="definition-col">
                     <div class="definition-col_item">
                       <img class="personality-icon" src="<?php echo url('/img/check-mark.png'); ?>" width="24" height="24" /> <span class="personality-icon_text">Fortalezas</span>
+                      <ul class="ul_little">
+                        @foreach ($grafica2[$key]["lista_fortalezas"] as $fortaleza)
+                        <li> {{$fortaleza}}</li>
+                        @endforeach
+                      </ul>
+                    </li>
                     </div>
                     <div class="definition-col_item">
                       <img class="personality-icon" src="<?php echo url('/img/line-chart.png'); ?>" width="24" height="24" /> <span class="personality-icon_text">Oportunidades de Mejora</span>
+                      <ul class="ul_little">
+                        @foreach ($grafica2[$key]["lista_oportunidades"] as $oportunidad)
+                        <li> {{$oportunidad}}</li>
+                        @endforeach
+                      </ul>
                     </div>
                   </div>
                 </td>
@@ -175,6 +186,11 @@
       .hero {
         text-align: center;
         padding: 11px 12px 16px;
+      }
+      .ul_little{
+        font-size:9px;
+        columns: 2;
+        margin:0px;
       }
       .title-main {
         font-weight: bold;
@@ -281,7 +297,7 @@
         flex-direction: column;
       }
       .definition-col_item {
-        padding: 20px 24px;
+        padding: 10px 24px;
       }
       .personality-icon {
         vertical-align: middle;
@@ -410,7 +426,7 @@
         
         @foreach ($report["perfil_ideal"] as $key=>$perfil_ideal_competencia)
         
-          var circuference = 150; // deg
+          var circuference = 180; // deg
           var bgColor = ["#0d5393", "#00afaa", "#5693cb"];
             /*if('{{$report["resultados_generales"][$key]["nivel"]}}' == 1 || '{{$report["resultados_generales"][$key]["nivel"]}}' == '1' || '{{$report["resultados_generales"][$key]["nivel"]}}' == 'Nivel 1'){
                 bgColor = ["#0d5393", "#00afaa", "#00afaa"];
@@ -467,17 +483,25 @@
                             var cw = canvas.offsetWidth;
                             var ch = canvas.offsetHeight;
                             var cx = cw / 2;
-                            var cy = ch - (ch / 2.5);
-
+                            var cy = ch - (ch / 3);
+                             
+                            var gpn = 60;//grados_por_nivel
+                            @if ($report["resultados_generales"][$key]["nivel_promedio"] === 1)
+                            var niv = 2;
+                            @elseif ($report["resultados_generales"][$key]["nivel_promedio"] === 2)
+                            var niv = 1;
+                            @else
+                            var niv = 0;
+                            @endif
                             ctx.translate(cx, cy);
-                            ctx.rotate((-45 * Math.PI / 180));
+                            ctx.rotate((-(gpn*niv+30) * Math.PI / 180));
                             ctx.beginPath();
                             ctx.moveTo(0, -5);
-                            ctx.lineTo(60, 0);
+                            ctx.lineTo(85, 0);
                             ctx.lineTo(0, 5);
                             ctx.fillStyle = 'rgba(0, 76, 0, 0.8)';
                             ctx.fill();
-                            ctx.rotate(-(-45 * Math.PI / 180));
+                            ctx.rotate(-(-(gpn*niv+30) * Math.PI / 180));
                             ctx.translate(-cx, -cy);
                             ctx.beginPath();
                             ctx.arc(cx, cy, 7, 0, Math.PI * 2);
@@ -493,14 +517,15 @@
           new Chart(ctxDona{{$indexJS}}, {
             type: "doughnut",
             data: {
-              labels: ["Fortalezas {{$grafica3[$key]['fortalezas_porc']}}%", "Oportunidades de Mejora {{$grafica3[$key]['oportunidades_porc']}}%"],
+              labels: ["Fortalezas", "Oportunidades de Mejora"],
               datasets: [{
                 // label: "# of Votes",
-                data: [{{$grafica3[$key]["fortalezas"]}}, {{$grafica3[$key]["oportunidades"]}}],
+                data: [{{$grafica3[$key]["fortalezas_porc"]}}, {{$grafica3[$key]["oportunidades_porc"]}}],
                 backgroundColor: ["#0d5393", "#00afaa"],
                 borderWidth: 0
               }]
             },
+            plugins: [ChartDataLabels],
             options: {
               responsive: true,
               plugins: {
@@ -510,10 +535,15 @@
                 datalabels: {
                     color: 'white',
                     textAlign: 'center',
+                    font: {
+                      weight: 'bold',
+                      size: 12,
+                    },
                     formatter: function(value, ctx) {
                     var index = ctx.dataIndex;
                     var label = ctx.chart.data.labels[index];
-                    return label + '\n' + value;
+                    var new_label = value + '%';
+                    return new_label;
                     }
                 },
                 title: {
