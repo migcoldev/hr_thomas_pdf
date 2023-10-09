@@ -623,8 +623,8 @@
                           window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
                       }) 
             //window.close();
-          }, 2050);
-        }, 2050);
+          }, 2500);
+        }, 2500);
       });
     </script>
     </div>
