@@ -115,7 +115,7 @@
             </table>
           </div>
           <div class="subtitle-content">
-            <h3 class="subtitle">Perfil Ideal Comunicación Integral</h3>
+            <h3 class="subtitle">Perfil Ideal {{$key}}</h3>
           </div>
           <table class="table-divisor">
             <tr>
