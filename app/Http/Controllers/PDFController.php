@@ -154,9 +154,9 @@ class PDFController extends Controller
             }
         }
         $grafica1 = [];
-        if($total_nivel1 > 0){ $grafica1[] = $total_nivel1 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3); }
-        if($total_nivel2 > 0){ $grafica1[] = $total_nivel2 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3); }
-        if($total_nivel3 > 0){ $grafica1[] = $total_nivel3 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3); }
+        if($total_nivel1 > 0){ $grafica1[] = round($total_nivel1 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3),2); }
+        if($total_nivel2 > 0){ $grafica1[] = round($total_nivel2 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3),2); }
+        if($total_nivel3 > 0){ $grafica1[] = round($total_nivel3 * 100 / ($total_nivel1 + $total_nivel2 + $total_nivel3),2); }
 
         $grafica2 = []; $grafica3 = [];
         foreach ($report_data["perfil_ideal"] as $key=>$competenciasArr) {
@@ -186,8 +186,13 @@ class PDFController extends Controller
             $grafica3[$key]["total"] = $total_fortalezas + $total_oportunidades;
             $grafica3[$key]["fortalezas"] = $total_fortalezas;
             $grafica3[$key]["oportunidades"] = $total_oportunidades;
-            $grafica3[$key]["fortalezas_porc"] = round((100 * $total_fortalezas / ($total_fortalezas + $total_oportunidades)), 2);
-            $grafica3[$key]["oportunidades_porc"] = round((100 * $total_oportunidades / ($total_fortalezas + $total_oportunidades)), 2);
+            if(($total_fortalezas + $total_oportunidades) === 0){
+                $grafica3[$key]["fortalezas_porc"] = 0;
+                $grafica3[$key]["oportunidades_porc"] = 0;
+            }else{
+                $grafica3[$key]["fortalezas_porc"] = round((100 * $total_fortalezas / ($total_fortalezas + $total_oportunidades)), 2);
+                $grafica3[$key]["oportunidades_porc"] = round((100 * $total_oportunidades / ($total_fortalezas + $total_oportunidades)), 2);
+            }
         }
           
         //var_dump($report_data["resultados_generales"]);
