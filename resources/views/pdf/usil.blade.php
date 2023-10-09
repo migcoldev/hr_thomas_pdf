@@ -17,7 +17,7 @@
               </td>
               <td></td>
               <td width="134">
-                <img src="<?php echo url('/img/usil.png'); ?>" />
+                <img src="<?php echo url('/img/usil_pdf.png'); ?>" />
               </td>
             </tr>
           </table>
