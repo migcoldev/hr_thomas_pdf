@@ -18,6 +18,7 @@
                     <table class="table border mb-0">
                       <thead class="table-light fw-semibold">
                         <tr class="align-middle">
+                          <th class="text-center">ID</th>
                           <th class="text-center">Candidato</th>
                           <th class="text-center">Fecha Conversión</th>
                           <th>Link Descarga</th>
@@ -27,6 +28,9 @@
                       <tbody>
                         @foreach ($documents as $document)
                         <tr class="align-middle">
+                          <td class="text-center">
+                            <div class="fw-semibold">P{{str_pad($document->id, 7, "0", STR_PAD_LEFT)}}</div>
+                          </td>
                           <td class="text-center">
                             <div>{{$document->person}}</div>
                           </td>
