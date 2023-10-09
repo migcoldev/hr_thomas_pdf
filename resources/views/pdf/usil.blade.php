@@ -585,18 +585,20 @@
 
         setTimeout(function(){
           var pdf = new jsPDF(jsPDFOpts);
+          //pdf.internal.scaleFactor = 30;
           var div_anterior = 0;
           var slides = document.getElementsByClassName("pdf-page");
           for (var i = 0; i < slides.length; i++) {
             var pdfWidth = pdf.internal.pageSize.getWidth();
             var pdfHeight = 0;
-            console.log("#"+slides[i].id);
-            html2canvas(document.querySelector("#"+slides[i].id)).then(canvas => {
+            html2canvas(document.querySelector("#"+slides[i].id), {
+                  scale:4
+                }).then(canvas => {
                 var img = canvas.toDataURL("image/jpeg");
                 const imgProps= pdf.getImageProperties(img);
                 pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
                 //document.getElementById("contenedor_pdf").style.display = 'none';
-                pdf.addImage(img, 'PNG', 0, div_anterior, pdfWidth, pdfHeight);
+                pdf.addImage(img, 'JPEG', 0, div_anterior, pdfWidth, pdfHeight);
                 
                 //if(i < slides.length){
                   pdf.addPage('A4', 'portrait');
