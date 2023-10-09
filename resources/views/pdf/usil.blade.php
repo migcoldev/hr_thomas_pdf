@@ -593,7 +593,7 @@
             var pdfWidth = pdf.internal.pageSize.getWidth();
             var pdfHeight = 0;
             html2canvas(document.querySelector("#"+slides[i].id), {
-                  scale:2
+                  scale:3
                 }).then(canvas => {
                 var img = canvas.toDataURL("image/jpeg");
                 const imgProps= pdf.getImageProperties(img);
@@ -626,7 +626,7 @@
                       }) 
             //window.close();
           }, 3500);
-        }, 500);
+        }, 1500);
       });
     </script>
     </div>
