@@ -13,7 +13,7 @@
           <table class="table-header">
             <tr>
               <td width="214">
-                <img src="<?php echo url('/img/logo.png'); ?>" />
+                <img width="214" src="<?php echo url('/img/logo_azul.png'); ?>" />
               </td>
               <td></td>
               <td width="134">
