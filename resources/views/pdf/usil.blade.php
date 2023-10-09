@@ -583,6 +583,7 @@
           format: 'A4'
         };
 
+        console.log("ACABO EL HTML");
         setTimeout(function(){
           var pdf = new jsPDF(jsPDFOpts);
           //pdf.internal.scaleFactor = 30;
@@ -592,7 +593,7 @@
             var pdfWidth = pdf.internal.pageSize.getWidth();
             var pdfHeight = 0;
             html2canvas(document.querySelector("#"+slides[i].id), {
-                  scale:3
+                  scale:2
                 }).then(canvas => {
                 var img = canvas.toDataURL("image/jpeg");
                 const imgProps= pdf.getImageProperties(img);
@@ -604,6 +605,7 @@
                   pdf.addPage('A4', 'portrait');
                 //}
             });
+            console.log("IMG 2 PDF");
             div_anterior = pdfHeight;
           }
           setTimeout(function(){ 
@@ -623,8 +625,8 @@
                           window.location.href = '<?php echo route("pdf.index", [ 'message' => 'archivo_importado']); ?>';
                       }) 
             //window.close();
-          }, 2500);
-        }, 2500);
+          }, 3500);
+        }, 500);
       });
     </script>
     </div>
