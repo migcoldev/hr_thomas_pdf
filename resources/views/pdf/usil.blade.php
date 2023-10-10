@@ -611,6 +611,8 @@
           }
           setTimeout(function(){ 
               //pdf.save('reporte_candidato.pdf'); 
+              var pageCount = pdf.internal.getNumberOfPages();
+              pdf.deletePage(pageCount);
               var blob = pdf.output('blob');
               console.log(blob);
               var formData = new FormData();
