@@ -31,7 +31,7 @@
                             <div class="fw-semibold">P{{str_pad($document->id, 7, "0", STR_PAD_LEFT)}}</div>
                           </td>
                           <td class="text-center">
-                            <div>{{$document->person}}</div>
+                            <div>{{$document->facultad}}</div>
                           </td>
                           <td class="text-center">
                             <div class="fw-semibold">{{$document->created_at}}</div>

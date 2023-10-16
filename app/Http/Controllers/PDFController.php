@@ -214,7 +214,7 @@ class PDFController extends Controller
             return redirect()->action([UserController::class, 'login']);
         }
         $documents = ReportDocument::where("file_type",'pdf_grupal')->orderBy("id","desc")->get();
-        return view('pdf.index', ['message' => $request->message, 'storage_url' => env('STORAGE_URL'), 'documents' => $documents]);
+        return view('pdf.indexgrupal', ['message' => $request->message, 'storage_url' => env('STORAGE_URL'), 'documents' => $documents]);
     }
     
     public function importar_grupal(Request $request)
@@ -493,7 +493,7 @@ class PDFController extends Controller
                 'id_user' => 1,
                 'file_type' => 'pdf_grupal',
                 'person' => '',
-                'faculty' => $faculty->name,
+                'facultad' => $faculty->name,
                 'original_file' => '',
                 'converted_file' => $doc_name,
                 'created_at' => now()
