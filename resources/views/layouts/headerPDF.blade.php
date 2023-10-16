@@ -53,7 +53,7 @@
         </svg>
       </div>
       <ul class="sidebar-nav" data-coreui="navigation" data-simplebar="">
-        <li class="nav-title">Conversor PDF</li>
+        <li class="nav-title">Personales</li>
         <li class="nav-item"><a class="nav-link" href="<?php echo route('pdf.index'); ?>">
             <svg class="nav-icon">
               <use xlink:href="<?php echo url('/'); ?>/vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
@@ -61,7 +61,22 @@
         <li class="nav-item"><a class="nav-link" href="<?php echo route('pdf.importar'); ?>">
             <svg class="nav-icon">
               <use xlink:href="<?php echo url('/'); ?>/vendors/@coreui/icons/svg/free.svg#cil-pencil"></use>
-            </svg> Importar Excel</a></li>
+            </svg> Importar Excel y Generar</a></li>
+        <li class="nav-title">Grupales</li>
+        <li class="nav-item"><a class="nav-link" href="<?php echo route('pdf.index_grupal'); ?>">
+            <svg class="nav-icon">
+              <use xlink:href="<?php echo url('/'); ?>/vendors/@coreui/icons/svg/free.svg#cil-chart-pie"></use>
+            </svg> Reportes</a></li>
+        <li class="nav-item"><a class="nav-link" href="<?php echo route('pdf.importar_grupal'); ?>">
+            <svg class="nav-icon">
+              <use xlink:href="<?php echo url('/'); ?>/vendors/@coreui/icons/svg/free.svg#cil-pencil"></use>
+            </svg> Importar Excel</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" href="<?php echo route('pdf.generar_grupal'); ?>">
+            <svg class="nav-icon">
+              <use xlink:href="<?php echo url('/'); ?>/vendors/@coreui/icons/svg/free.svg#cil-pencil"></use>
+            </svg> Generar PDF</a>
+        </li>
       </ul>
       <button class="sidebar-toggler" type="button" data-coreui-toggle="unfoldable"></button>
     </div>

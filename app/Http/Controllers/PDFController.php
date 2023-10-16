@@ -7,18 +7,22 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Storage;
 use App\Models\ReportDocument;
+use App\Models\GroupReportProfile;
+use App\Models\GroupReportResults;
+use App\Models\Faculty;
 use Spatie\SimpleExcel\SimpleExcelReader;
 use Spatie\SimpleExcel\SimpleExcelWriter;
 
 class PDFController extends Controller
 {
     
+    ###### REPORTE PERSONAL #######
     public function index(Request $request)
     {
         if ($request->session()->has('username') == FALSE) {
             return redirect()->action([UserController::class, 'login']);
         }
-        $documents = ReportDocument::where("file_type",'pdf')->orderBy("id","desc")->get();
+        $documents = ReportDocument::where("file_type",'pdf_personal')->orderBy("id","desc")->get();
         return view('pdf.index', ['message' => $request->message, 'storage_url' => env('STORAGE_URL'), 'documents' => $documents]);
     }
     
@@ -42,7 +46,7 @@ class PDFController extends Controller
         $name = explode('.', $fullname)[0];
         $extension = $request->file('archivos')->getClientOriginalExtension();
         //$new_name = filter_var(($name."-".time()), FILTER_SANITIZE_STRING).".".$extension;
-        $new_name = "reporte-importado-".time().".".$extension;
+        $new_name = "reporte-personal-importado-".time().".".$extension;
         $filename = $request->file('archivos')->storeAs('originales', $new_name);
         session(['info_global' => []]);
         
@@ -62,7 +66,7 @@ class PDFController extends Controller
         if(count($arrResultGen) > 0){
             $document = new ReportDocument([
                 'id_user' => 1,
-                'file_type' => 'pdf',
+                'file_type' => 'pdf_personal',
                 'person' => $arrResultGen["candidato"],
                 'original_file' => $new_name,
                 'converted_file' => '',
@@ -202,6 +206,268 @@ class PDFController extends Controller
         return view('pdf.usil', ['name' => $document->original_file, 'report' => $report_data, 'grafica1' => $grafica1, 'count_grafica1' => count($grafica1), 'grafica2' => $grafica2, 'grafica3' => $grafica3, 'iterator_perfil_ideal' => $iterator_perfil_ideal, 'index' => 2, 'indexJS' => 2 ]);
         //return redirect()->action([PDFController::class, 'importar']);
     }
+
+    ###### REPORTE GRUPAL #######
+    public function indexgrupal(Request $request)
+    {
+        if ($request->session()->has('username') == FALSE) {
+            return redirect()->action([UserController::class, 'login']);
+        }
+        $documents = ReportDocument::where("file_type",'pdf_grupal')->orderBy("id","desc")->get();
+        return view('pdf.index', ['message' => $request->message, 'storage_url' => env('STORAGE_URL'), 'documents' => $documents]);
+    }
+    
+    public function importar_grupal(Request $request)
+    {
+        if ($request->session()->has('username') == FALSE) {
+            return redirect()->action([UserController::class, 'login']);
+        }
+        return view('pdf.importargrupal', ['message' => $request->message]);
+    }
+    
+    public function generar_grupal(Request $request)
+    {
+        $faculties = Faculty::orderBy("name","asc")->get();
+        if ($request->session()->has('username') == FALSE) {
+            return redirect()->action([UserController::class, 'login']);
+        }
+        return view('pdf.formgrupal', ['faculties' => $faculties]);
+    }
+    
+    public function convertir_grupal(Request $request)
+    {
+        $this->validate($request, [
+            'archivos'=>'required',
+        ]);
+        
+        $archivos_originales = [];
+
+        $fullname = $request->file('archivos')->getClientOriginalName();
+        $name = explode('.', $fullname)[0];
+        $extension = $request->file('archivos')->getClientOriginalExtension();
+        $new_name = "reporte-grupal-importado-".time().".".$extension;
+        $filename = $request->file('archivos')->storeAs('originales', $new_name);
+        session(['info_global' => []]);
+        
+        GroupReportProfile::truncate();
+        GroupReportResults::truncate();
+        Faculty::truncate();
+
+        $rows = SimpleExcelReader::create(Storage::disk('local')->path($filename), 'xlsx')->trimHeaderRow()
+        ->fromSheetName("ResultadosSegúnPerfilIdeal")
+        ->useHeaders(['Evaluación','Rasgo','Nombre Competencia','Nivel','Llave','Perfil','Fortaleza','Oportunidad','Facultad','Conteo','Total Estudiantes por Nivel, Competencia y Facultad'])
+        ->getRows();
+        $rows->each(function(array $rowProperties) {
+            $arrAux = session('info_global', []);
+            if(intval($rowProperties["Conteo"]) > 0){
+                $faculty = Faculty::where("name", trim($rowProperties["Facultad"]))->first();
+                if($faculty){ //Existe 
+                }else{
+                    $faculty = new Faculty([
+                        'name' => trim($rowProperties["Facultad"]), 
+                        'created_at' => now()
+                    ]);
+                    $faculty->save();
+                }
+                $group_profile = new GroupReportProfile([
+                    'id_user' => 1,
+                    'id_faculty' => $faculty->id,
+                    'facultad' => trim($rowProperties["Facultad"]), 
+                    'evaluacion' => trim($rowProperties["Evaluación"]),
+                    'rasgo' => trim($rowProperties["Rasgo"]),
+                    'competencia' => trim($rowProperties["Nombre Competencia"]),  
+                    'nivel' => trim($rowProperties["Nivel"]),  
+                    'llave' => trim($rowProperties["Llave"]),  
+                    'perfil' => trim($rowProperties["Perfil"]),  
+                    'fortaleza' => intval($rowProperties["Fortaleza"]),  
+                    'oportunidad' => intval($rowProperties["Oportunidad"]),  
+                    'conteo' => intval($rowProperties["Conteo"]),  
+                    'total_estudiantes' => intval($rowProperties["Total Estudiantes por Nivel, Competencia y Facultad"]),  
+                    'created_at' => now()
+                ]);
+                $group_profile->save();
+            }
+        });
+        
+        $rows = SimpleExcelReader::create(Storage::disk('local')->path($filename), 'xlsx')->trimHeaderRow()
+        ->fromSheetName("ResultadosGrupales")
+        ->useHeaders(['Facultad','Nivel Alcanzado','Estado','Cantidad Estudiantes','Rasgo','Evaluación'])
+        ->getRows();
+        $rows->each(function(array $rowProperties) {
+            $arrAux = session('info_global', []);
+            $faculty = Faculty::where("name", trim($rowProperties["Facultad"]))->first();
+            if($faculty){ //Existe 
+            }else{
+                $faculty = new Faculty([
+                    'name' => trim($rowProperties["Facultad"]), 
+                    'created_at' => now()
+                ]);
+                $faculty->save();
+            }
+
+            $group_results = new GroupReportResults([
+                'id_user' => 1,
+                'id_faculty' => $faculty->id,
+                'facultad' => trim($rowProperties["Facultad"]), 
+                'nivel_alcanzado' => trim($rowProperties["Nivel Alcanzado"]),
+                'estado' => trim($rowProperties["Estado"]),
+                'cantidad_estudiantes' => trim($rowProperties["Cantidad Estudiantes"]),  
+                'rasgo' => trim($rowProperties["Rasgo"]),  
+                'evaluacion' => trim($rowProperties["Evaluación"]),  
+                'created_at' => now()
+            ]);
+            $group_results->save();
+        });
+        return redirect()->action(
+            [PDFController::class, 'importar_grupal'], ['message' => 'archivo_importado']
+        );
+    }
+    
+    public function usiltemplate_grupal(Request $request)
+    {
+        if ($request->session()->has('username') == FALSE) {
+            return redirect()->action([UserController::class, 'login']);
+        }
+        $this->validate($request, [
+            'select_facultad'=>'required',
+            'imagen_ppa'=>'required',
+            'explicacion_ppa'=>'required',
+            'imagen_teiq'=>'required',
+            'explicacion_teiq'=>'required',
+            'imagen_hpti'=>'required',
+            'explicacion_hpti'=>'required',
+        ]);
+        $group_report_by_profile = GroupReportProfile::where("id_faculty",intval($request->select_facultad))->selectRaw("competencia, nivel, total_estudiantes")->groupBy("competencia", "nivel", "total_estudiantes")->get();
+        $arrComp = [];$arrCompTotales = [];$dataCompetencias = [];
+        foreach ($group_report_by_profile as $comp_data){
+            $arrComp[$comp_data->competencia]["Nivel 1"] = 0;
+            $arrComp[$comp_data->competencia]["Nivel 2"] = 0;
+            $arrComp[$comp_data->competencia]["Nivel 3"] = 0;
+        }
+        foreach ($group_report_by_profile as $comp_data){
+            $arrComp[$comp_data->competencia][$comp_data->nivel] = $comp_data->total_estudiantes;
+            $arrCompTotales[$comp_data->competencia] = 0;
+        }
+        $group_report_by_profile_data = GroupReportProfile::where("id_faculty",intval($request->select_facultad))->get();
+        foreach ($group_report_by_profile_data as $comp_data){
+            if(trim($comp_data->perfil) != ""){
+                $dataCompetencias[$comp_data->competencia][$comp_data->nivel]["total_rows"] = 0;
+                $dataCompetencias[$comp_data->competencia][$comp_data->nivel]["data"][$comp_data->evaluacion][$comp_data->rasgo][$comp_data->perfil] = $comp_data;
+            }
+        }
+        foreach ($group_report_by_profile_data as $comp_data){
+            if(trim($comp_data->perfil) != ""){
+                $dataCompetencias[$comp_data->competencia][$comp_data->nivel]["total_rows"]++;
+            }
+        }
+
+        //Grafica Barra 1
+        $grafica_barras_1 = GroupReportResults::where("id_faculty",intval($request->select_facultad))->where("evaluacion",'PPA')->selectRaw("rasgo, SUM(cantidad_estudiantes) as total_cantidad_estudiantes")->groupBy("rasgo")->get();
+        $arrGrafica1 = [];$arrGrafica1["D"] = [];$arrGrafica1["I"] = [];$arrGrafica1["S"] = [];$arrGrafica1["C"] = [];
+        foreach ($grafica_barras_1 as $obj){
+            $letra = strtoupper(substr($obj->rasgo, 0, 1));
+            if($letra == "E"){
+                $letra = "S";
+            }
+            $arrGrafica1[$letra] = $obj->total_cantidad_estudiantes;
+        }
+        $grafica_barras_1_alta = GroupReportResults::where("id_faculty",intval($request->select_facultad))->where("evaluacion",'PPA')->where("estado",'Alto')->selectRaw("rasgo, SUM(cantidad_estudiantes) as total_cantidad_estudiantes")->groupBy("rasgo")->get();
+        $arrGrafica1Alta = [];
+        $totalGrafica1Alta = 0;
+        foreach ($grafica_barras_1_alta as $obj){
+            $letra = strtoupper(substr($obj->rasgo, 0, 1));
+            if($letra == "E"){
+                $letra = "S";
+            }
+            $arrGrafica1Alta[$letra] = $obj->total_cantidad_estudiantes;
+            $totalGrafica1Alta += $obj->total_cantidad_estudiantes;
+        }
+
+        //Grafica Barra 2
+        //Select rasgo, estado, SUM(cantidad_estudiantes) as total_cantidad_estudiantes from group_report_data_results where evaluacion = 'TEIQ' and id_faculty = 7 group by rasgo, estado
+        $grafica_barras_2 = GroupReportResults::where("id_faculty",intval($request->select_facultad))->where("evaluacion",'TEIQ')->selectRaw("rasgo, estado, SUM(cantidad_estudiantes) as total_cantidad_estudiantes")->groupBy("rasgo", "estado")->get();
+        $arrGrafica2 = [];$arrLabelEstadoG2 = [];$arrGrafica2Perc = [];$arrRasgos = [];
+        foreach ($grafica_barras_2 as $obj){
+            $arrRasgos[] = trim($obj->rasgo);
+        }
+        $arrRasgos = array_unique($arrRasgos);
+        foreach ($arrRasgos as $objRasgo){
+            $arrGrafica2[$objRasgo]["data"]["Alto"]["label"] = trim($obj->estado);
+            $arrGrafica2[$objRasgo]["data"]["Alto"]["value"] = 0;
+            $arrGrafica2[$objRasgo]["data"]["Alto"]["total"] = 0;
+            $arrGrafica2[$objRasgo]["data"]["Bajo"]["label"] = trim($obj->estado);
+            $arrGrafica2[$objRasgo]["data"]["Bajo"]["value"] = 0;
+            $arrGrafica2[$objRasgo]["data"]["Bajo"]["total"] = 0;
+            $arrGrafica2[$objRasgo]["data"]["Promedio"]["label"] = trim($obj->estado);
+            $arrGrafica2[$objRasgo]["data"]["Promedio"]["value"] = 0;
+            $arrGrafica2[$objRasgo]["data"]["Promedio"]["total"] = 0;
+        }
+        foreach ($grafica_barras_2 as $obj){
+            $rasgo = trim($obj->rasgo);
+            $arrGrafica2[trim($obj->rasgo)]["label"] = $rasgo;
+            $arrGrafica2[trim($obj->rasgo)]["data"][trim($obj->estado)]["value"] = $obj->total_cantidad_estudiantes;
+            $arrGrafica2[trim($obj->rasgo)]["data"][trim($obj->estado)]["total"] = 0;
+            //if(array_search(trim($obj->estado), $arrLabelEstadoG2)<0){
+            $arrLabelEstadoG2[] = trim($obj->estado);
+            //}
+        }
+        $total_conteoG2 = 0;$c = 0;
+        foreach ($grafica_barras_2 as $obj){
+            if ($c === 0) {
+                $total_conteoG2 = $arrGrafica2[trim($obj->rasgo)]["data"]['Alto']["value"] + $arrGrafica2[trim($obj->rasgo)]["data"]['Bajo']["value"] + $arrGrafica2[trim($obj->rasgo)]["data"]['Promedio']["value"];$c++;
+            }
+        }
+        $arrLabelEstadoG2 = array_unique($arrLabelEstadoG2);
+
+        $grafica_barras_3 = GroupReportResults::where("id_faculty",intval($request->select_facultad))->where("evaluacion",'HPTI')->selectRaw("rasgo, estado, SUM(cantidad_estudiantes) as total_cantidad_estudiantes")->groupBy("rasgo", "estado")->get();
+        $arrGrafica3 = [];$arrLabelEstadoG3 = [];$arrGrafica3Perc = [];$arrRasgos3 = [];
+        foreach ($grafica_barras_3 as $obj){
+            $arrRasgos3[] = trim($obj->rasgo);
+        }
+        $arrRasgos3 = array_unique($arrRasgos3);
+        foreach ($arrRasgos3 as $objRasgo){
+            $arrGrafica3[$objRasgo]["data"]["Bajo"]["label"] = trim($obj->estado);
+            $arrGrafica3[$objRasgo]["data"]["Bajo"]["value"] = 0;
+            $arrGrafica3[$objRasgo]["data"]["Bajo"]["total"] = 0;
+            $arrGrafica3[$objRasgo]["data"]["Moderado"]["label"] = trim($obj->estado);
+            $arrGrafica3[$objRasgo]["data"]["Moderado"]["value"] = 0;
+            $arrGrafica3[$objRasgo]["data"]["Moderado"]["total"] = 0;
+            $arrGrafica3[$objRasgo]["data"]["Óptimo"]["label"] = trim($obj->estado);
+            $arrGrafica3[$objRasgo]["data"]["Óptimo"]["value"] = 0;
+            $arrGrafica3[$objRasgo]["data"]["Óptimo"]["total"] = 0;
+            $arrGrafica3[$objRasgo]["data"]["Excesivo"]["label"] = trim($obj->estado);
+            $arrGrafica3[$objRasgo]["data"]["Excesivo"]["value"] = 0;
+            $arrGrafica3[$objRasgo]["data"]["Excesivo"]["total"] = 0;
+        }
+        foreach ($grafica_barras_3 as $obj){
+            $rasgo = trim($obj->rasgo);
+            $arrGrafica3[trim($obj->rasgo)]["label"] = $rasgo;
+            $arrGrafica3[trim($obj->rasgo)]["data"][trim($obj->estado)]["value"] = $obj->total_cantidad_estudiantes;
+            $arrGrafica3[trim($obj->rasgo)]["data"][trim($obj->estado)]["total"] = 0;
+            $arrLabelEstadoG3[] = trim($obj->estado);
+        }
+        $arrLabelEstadoG3 = array_unique($arrLabelEstadoG3);
+        $total_conteoG3 = 0;$c = 0;
+        foreach ($grafica_barras_3 as $obj){
+            if ($c === 0) {
+                $total_conteoG3 = $arrGrafica3[trim($obj->rasgo)]["data"]['Moderado']["value"] + $arrGrafica3[trim($obj->rasgo)]["data"]['Bajo']["value"] + $arrGrafica3[trim($obj->rasgo)]["data"]['Óptimo']["value"] + $arrGrafica3[trim($obj->rasgo)]["data"]['Excesivo']["value"];$c++;
+            }
+        }
+
+        return view('pdf.usilgrupal', [
+            'faculty' => intval($request->select_facultad),
+            'report_name' => "reporte_grupal_".intval($request->select_facultad)."_".time(),
+            'group_report_by_profile' => $dataCompetencias, 'arrComp' => $arrComp,
+            'grafica_barras_1' => $grafica_barras_1,
+            'arrGrafica1' => $arrGrafica1, 'arrGrafica1Alta' => $arrGrafica1Alta, 'totalGrafica1Alta' => $totalGrafica1Alta,
+            'arrGrafica2' => $arrGrafica2, 'arrLabelEstadoG2' => $arrLabelEstadoG2, 'arrRasgos' => $arrRasgos, 'total_conteoG2' => $total_conteoG2,
+            'arrGrafica3' => $arrGrafica3, 'arrLabelEstadoG3' => $arrLabelEstadoG3, 'arrRasgos3' => $arrRasgos3, 'total_conteoG3' => $total_conteoG3,
+            'imagen_ppa' => $this->convert_to_64($request->imagen_ppa), 'explicacion_ppa' => trim($request->explicacion_ppa),
+            'imagen_teiq' => $this->convert_to_64($request->imagen_teiq), 'explicacion_teiq' => trim($request->explicacion_teiq),
+            'imagen_hpti' => $this->convert_to_64($request->imagen_hpti), 'explicacion_hpti' => trim($request->explicacion_hpti),
+        ]);
+    }
+
     
     public function uploadblob(Request $request)
     {
@@ -216,8 +482,24 @@ class PDFController extends Controller
         );
         //file_put_contents($storagePath."/".$doc_name, $request->pdf);
 
-        $document = ReportDocument::where("original_file",trim($request->name))->first();
-        $document->update([ 'converted_file' => $doc_name ]);
+        if($request->type == "personal"){
+    
+            $document = ReportDocument::where("original_file",trim($request->name))->first();
+            $document->update([ 'converted_file' => $doc_name ]);
+        }elseif($request->type == "grupal"){
+            $faculty = Faculty::where("id", intval($request->faculty))->first();
+            
+            $document = new ReportDocument([
+                'id_user' => 1,
+                'file_type' => 'pdf_grupal',
+                'person' => '',
+                'faculty' => $faculty->name,
+                'original_file' => '',
+                'converted_file' => $doc_name,
+                'created_at' => now()
+            ]);
+            $document->save();
+        }
 
         return response()->json(['file' => $doc_name], 200);
     }

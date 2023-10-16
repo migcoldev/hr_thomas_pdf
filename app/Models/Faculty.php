@@ -4,22 +4,17 @@ namespace App\Models;
  
 use Illuminate\Database\Eloquent\Model;
  
-class ReportDocument extends Model
+class Faculty extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'report_document';
+    protected $table = 'faculty';
     //
 
     protected $fillable = [
-        'id_user', 
-        'file_type', 
-        'person',
-        'facultad',
-        'original_file',  
-        'converted_file',  
+        'name', 
         'created_at'];
 }

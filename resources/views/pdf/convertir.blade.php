@@ -2,7 +2,7 @@
     <div class="row">
     <div class="col-md-12">
         <div class="card mb-4">
-            <div class="card-header"><strong>Reportes convertidos</strong></div>
+            <div class="card-header"><strong>Reportes personales convertidos</strong></div>
             <div class="card-body">
             <div class="example">
                 <div class="mb-3">

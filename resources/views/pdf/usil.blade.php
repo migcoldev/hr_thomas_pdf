@@ -619,7 +619,7 @@
               formData.append('pdf', blob);
               formData.append('name', '{{ $name }}');
               formData.append('csrf_token', '{{ csrf_token() }}');
-              let fetchRes = fetch('<?php echo route('pdf.uploadblob'); ?>?name={{$name}}', {
+              let fetchRes = fetch('<?php echo route('pdf.uploadblob'); ?>?type=personal&name={{$name}}', {
                   method: "POST", 
                   body: formData 
               });
