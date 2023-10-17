@@ -53,7 +53,8 @@
                 selector: 'textarea',
                 plugins: '',
                 toolbar: '',
-                forced_root_block : ""
+                forced_root_block : "",
+                content_style: "p { margin: 0; }",
                 });
             });
           </script>
