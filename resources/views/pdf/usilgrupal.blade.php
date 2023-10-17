@@ -84,7 +84,7 @@
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <?php $comp_data = $group_report_by_profile["Comunicación Integral"]; ?>
       <div class="title-content">
-        <h2 class="title">Comunicación Integral</h2>
+        <h2 class="title">Comunicación Integral - Detalle de Fortalezas y Oportunidades</h2>
       </div>
       <div class="body">
         <div class="subtitle-content">
@@ -137,7 +137,7 @@
         
       <?php $comp_data = $group_report_by_profile["Investigación"]; ?>
       <div class="title-content">
-        <h2 class="title">Investigación</h2>
+        <h2 class="title">Investigación - Detalle de Fortalezas y Oportunidades</h2>
       </div>
       <div class="body">
         <div class="subtitle-content">
@@ -192,7 +192,7 @@
     <?php $comp_data = $group_report_by_profile["Emprendimiento"]; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
-        <h2 class="title">Emprendimiento</h2>
+        <h2 class="title">Emprendimiento - Detalle de Fortalezas y Oportunidades</h2>
       </div>
       <div class="body">
         <div class="subtitle-content">
@@ -247,7 +247,7 @@
     <?php $comp_data = $group_report_by_profile["Desarrollo Humano y Sostenible"]; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
-        <h2 class="title">Desarrollo Humano y Sostenible</h2>
+        <h2 class="title">Desarrollo Humano y Sostenible - Detalle de Fortalezas y Oportunidades</h2>
       </div>
       <div class="body">
         <div class="subtitle-content">
@@ -302,7 +302,7 @@
     <?php $comp_data = $group_report_by_profile["Competencia Digital"]; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
-        <h2 class="title">Competencia Digital</h2>
+        <h2 class="title">Competencia Digital - Detalle de Fortalezas y Oportunidades</h2>
       </div>
       <div class="body">
         <div class="subtitle-content">
@@ -357,7 +357,7 @@
     <?php $comp_data = $group_report_by_profile["Comunicacion Bilingüe"]; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
-        <h2 class="title">Comunicacion Bilingüe</h2>
+        <h2 class="title">Comunicacion Bilingüe - Detalle de Fortalezas y Oportunidades</h2>
       </div>
       <div class="body">
         <div class="subtitle-content">
@@ -519,7 +519,7 @@
     <?php $page++; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
-        <h2 class="title">Assessments Aplicados</h2>
+        <h2 class="title">Assessments Aplicados - Análisis de Resultados Pruebas Thomas</h2>
       </div>
       <div class="body">
         <table class="table-graphs">
@@ -1136,10 +1136,16 @@
 
         // Grafica PPA - Perfil de Análisis Personal
         var hb1_labels = [];var hb1_values = [];
+        var hb1_suma = 0;
         @foreach ($arrGrafica1 as $keyG1=>$objG1)
         hb1_labels.push("{{$keyG1}}");
         hb1_values.push({{$objG1}});
+        hb1_suma += {{$objG1}};
         @endforeach
+
+        for(i=0;i<hb1_values.length;i++){
+          hb1_values[i] = (hb1_values[i]*100/hb1_suma).toFixed(2);
+        }
         
         var ctxG1 = document.getElementById("horizontal-bars-1").getContext("2d", { willReadFrequently: true });
         new Chart(ctxG1, {
@@ -1522,7 +1528,7 @@
                 });
                 fetchRes.then(res => 
                         res.json()).then(d => { 
-                            window.location.href = '<?php echo route("pdf.index_grupal", [ 'message' => 'archivo_importado']); ?>';
+                            //window.location.href = '<?php echo route("pdf.index_grupal", [ 'message' => 'archivo_importado']); ?>';
                         }) 
               //window.close();
             }, 4000);
