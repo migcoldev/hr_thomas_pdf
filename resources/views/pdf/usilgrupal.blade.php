@@ -24,7 +24,7 @@
         </table>
       </div>
       <div class="hero">
-        <h1 class="title-main">Evaluación a Alumnos USIL</h1>
+        <h1 class="title-main">Evaluación a Alumnos USIL - {{$faculty_name}}</h1>
       </div>
       <div class="title-content">
         <h2 class="title">RESULTADOS GENERALES</h2>
@@ -588,7 +588,7 @@
           <tr>
             <td class="table-profile_text">
               <div class="table-profile_content">
-                <h4>Puntos fuertes del Equipo:</h4>
+                <h4>Resumen Conductual (PPA):</h4>
                 <p>{!! $explicacion_ppa !!}</p>
               </div>
             </td>
@@ -638,6 +638,7 @@
         </div>
         <div class="bars-text">
           <div class="bars-text_content">
+            <h4>Resumen de Inteligencia Emocional (TEIQ):</h4>
             <p>{!! $explicacion_teiq !!}</p>
           </div>
         </div>
@@ -682,6 +683,7 @@
         </div>
         <div class="bars-text">
           <div class="bars-text_content">
+            <h4>Resumen de Potencial para el Liderazgo (HPTI):</h4>
             <p>{!! $explicacion_hpti !!}</p>
           </div>
         </div>

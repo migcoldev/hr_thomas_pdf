@@ -337,6 +337,7 @@ class PDFController extends Controller
             'imagen_hpti'=>'required',
             'explicacion_hpti'=>'required',
         ]);
+        $facultyObj = Faculty::where("id", intval($request->select_facultad))->first();
         $group_report_by_profile = GroupReportProfile::where("id_faculty",intval($request->select_facultad))->selectRaw("competencia, nivel, total_estudiantes")->groupBy("competencia", "nivel", "total_estudiantes")->get();
         $arrComp = [];$arrCompTotales = [];$dataCompetencias = [];
         foreach ($group_report_by_profile as $comp_data){
@@ -455,7 +456,7 @@ class PDFController extends Controller
         }
 
         return view('pdf.usilgrupal', [
-            'faculty' => intval($request->select_facultad),
+            'faculty' => intval($request->select_facultad),'faculty_name' => trim($facultyObj->name),
             'report_name' => "reporte_grupal_".intval($request->select_facultad)."_".time(),
             'group_report_by_profile' => $dataCompetencias, 'arrComp' => $arrComp,
             'grafica_barras_1' => $grafica_barras_1,
