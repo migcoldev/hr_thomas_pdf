@@ -966,6 +966,10 @@
         margin-top: 0;
         font-size: 14px;
       }
+      .bars-text_content h4 {
+        margin: 0 0 24px;
+        font-size: 14px;
+      }
       .bars-text {
         background-color: #eee;
         padding: 36px;
