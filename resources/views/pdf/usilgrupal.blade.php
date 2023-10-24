@@ -409,7 +409,7 @@
     </div>
     
 
-
+    @if ($faculty_name == 'General' || $faculty_name == 'GENERAL')
     <?php $page++; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="body">
@@ -516,6 +516,8 @@
         </table>
       </div>
     </div>
+    @endif
+
     <?php $page++; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
@@ -563,26 +565,7 @@
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="body">
         <div class="subtitle-content">
-          <h3 class="subtitle">Resultados Generales - PPA</h3>
-        </div>
-        <div class="table-ppa_content">
-          <table class="table-ppa">
-            <tr>
-              <td class="table-ppa__header table-ppa__header_col1" width="20%">PPA</td>
-              <td class="table-ppa__header table-ppa__header_col2" width="40%">#</td>
-              <td class="table-ppa__header table-ppa__header_col3" width="40%">%</td>
-            </tr>
-            @foreach ($arrGrafica1Alta as $keyG1=>$objG1)
-            <tr>
-              <td class="table-ppa__aside">Alta {{$keyG1}}</td>
-              <td class="table-ppa__value">{{$objG1}}</td>
-              <td class="table-ppa__value">{{round($objG1*100/$totalGrafica1Alta, 2).'%'}}</td>
-            </tr>
-            @endforeach
-          </table>
-        </div>
-        <div class="subtitle-content">
-          <h3 class="subtitle">PPA - Perfil de Análisis Personal</h3>
+          <h3 class="subtitle">PPA - Perfil Conductual</h3>
         </div>
         <table class="table-profile">
           <tr>
@@ -598,33 +581,6 @@
             </td>
           </tr>
         </table>
-      </div>
-    </div>
-    <?php $page++; ?>
-    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
-      <div class="body">
-        <div class="subtitle-content">
-          <h3 class="subtitle">Resultados Generales - TEIQ</h3>
-        </div>
-        <div class="table-ppa_content">
-          <table class="table-teiq">
-            <tr>
-              <td class="table-teiq_header table-teiq_header_aside">Rasgo</td>
-              <td class="table-teiq_header" colspan="2">Bajo</td>
-              <td class="table-teiq_header" colspan="2">Promedio</td>
-              <td class="table-teiq_header" colspan="2">Alto</td>
-            </tr>
-            @foreach ($arrGrafica2 as $key2=>$objRasgo)
-              <tr>
-                <td clqass="table-teiq_aside">{{$objRasgo["label"]}}</td>
-              @foreach ($objRasgo["data"] as $key3=>$itemEstado)
-                <td class="table-teiq_value">{{$itemEstado["value"]}}</td>
-                <td class="table-teiq_value">{{round($itemEstado["value"]*100/$total_conteoG2, 2)}}%</td>
-              @endforeach
-              </tr>
-            @endforeach 
-          </table>
-        </div>
       </div>
     </div>
     <?php $page++; ?>
@@ -648,35 +604,7 @@
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="body">
         <div class="subtitle-content">
-          <h3 class="subtitle">Resultados Generales - HPTI</h3>
-        </div>
-        <div class="table-ppa_content">
-          <table class="table-teiq">
-            <tr>
-              <td class="table-teiq_header table-teiq_header_aside">Rasgo</td>
-              <td class="table-teiq_header" colspan="2">Bajo</td>
-              <td class="table-teiq_header" colspan="2">Promedio</td>
-              <td class="table-teiq_header" colspan="2">Alto</td>
-              <td class="table-teiq_header" colspan="2">Excesivo</td>
-            </tr>
-            @foreach ($arrGrafica3 as $key2=>$objRasgo)
-              <tr>
-                <td clqass="table-teiq_aside">{{$objRasgo["label"]}}</td>
-              @foreach ($objRasgo["data"] as $key3=>$itemEstado)
-                <td class="table-teiq_value">{{$itemEstado["value"]}}</td>
-                <td class="table-teiq_value">{{round($itemEstado["value"]*100/$total_conteoG3, 2)}}%</td>
-              @endforeach
-              </tr>
-            @endforeach 
-          </table>
-        </div>
-      </div>
-    </div>
-    <?php $page++; ?>
-    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
-      <div class="body">
-        <div class="subtitle-content">
-          <h3 class="subtitle">HPTI - Inteligencia Emocional</h3>
+          <h3 class="subtitle">HPTI - Potencial para el Liderazgo</h3>
         </div>
         <div class="bars-content">
             <img src="{{$imagen_hpti}}" class="table-profile_img" />

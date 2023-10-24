@@ -24,7 +24,7 @@
         </table>
       </div>
       <div class="hero">
-        <h1 class="title-main">Evaluación a Alumnos USIL</h1>
+        <h1 class="title-main">Evaluación a Alumnos USIL - {{$faculty_name}}</h1>
       </div>
       <div class="title-content">
         <h2 class="title">RESULTADOS GENERALES</h2>
@@ -79,14 +79,65 @@
         </table>
       </div>
     </div>
-    <?php $i = 0; ?>
-    @foreach ($group_report_by_profile as $key=>$comp_data)
-    @if ($i === 0)
+    
     <?php $page++; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
-    @endif
+      <?php $comp_data = $group_report_by_profile["Comunicación Integral"]; ?>
       <div class="title-content">
-        <h2 class="title">{{$key}}</h2>
+        <h2 class="title">Comunicación Integral - Detalle de Fortalezas y Oportunidades</h2>
+      </div>
+      <div class="body">
+        <div class="subtitle-content">
+          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
+        </div>
+        <table class="table-divisor">
+          <tr>
+            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
+            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
+          </tr>
+          <tr>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+          </tr>
+          @foreach ($comp_data as $keyN=>$comp_nivel)
+            <tr>
+              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
+                  {{ $keyN }}
+              </td>
+            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
+              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
+              @foreach ($comp_eval as $keyP=>$comp_rasgo)
+                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
+                @foreach ($comp_rasgo as $comp_perfil)
+                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
+                  <td class="table-divisor_gap"></td>
+                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                </tr>
+                @endforeach
+              @endforeach
+            @endforeach
+          @endforeach
+        </table>
+        </div>
+
+        
+      <?php $comp_data = $group_report_by_profile["Investigación"]; ?>
+      <div class="title-content">
+        <h2 class="title">Investigación - Detalle de Fortalezas y Oportunidades</h2>
       </div>
       <div class="body">
         <div class="subtitle-content">
@@ -135,14 +186,230 @@
           @endforeach
         </table>
       </div>
-      <?php $i++; ?>
-    @if ($i === 2)
     </div>
-    <?php $i = 0; ?>
-    @endif
-    @endforeach
+    
+    <?php $page++; ?>
+    <?php $comp_data = $group_report_by_profile["Emprendimiento"]; ?>
+    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
+      <div class="title-content">
+        <h2 class="title">Emprendimiento - Detalle de Fortalezas y Oportunidades</h2>
+      </div>
+      <div class="body">
+        <div class="subtitle-content">
+          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
+        </div>
+        <table class="table-divisor">
+          <tr>
+            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
+            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
+          </tr>
+          <tr>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+          </tr>
+          @foreach ($comp_data as $keyN=>$comp_nivel)
+            <tr>
+              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
+                  {{ $keyN }}
+              </td>
+            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
+              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
+              @foreach ($comp_eval as $keyP=>$comp_rasgo)
+                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
+                @foreach ($comp_rasgo as $comp_perfil)
+                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
+                  <td class="table-divisor_gap"></td>
+                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                </tr>
+                @endforeach
+              @endforeach
+            @endforeach
+          @endforeach
+        </table>
+      </div>
+    </div>
+    
+    <?php $page++; ?>
+    <?php $comp_data = $group_report_by_profile["Desarrollo Humano y Sostenible"]; ?>
+    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
+      <div class="title-content">
+        <h2 class="title">Desarrollo Humano y Sostenible - Detalle de Fortalezas y Oportunidades</h2>
+      </div>
+      <div class="body">
+        <div class="subtitle-content">
+          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
+        </div>
+        <table class="table-divisor">
+          <tr>
+            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
+            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
+          </tr>
+          <tr>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+          </tr>
+          @foreach ($comp_data as $keyN=>$comp_nivel)
+            <tr>
+              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
+                  {{ $keyN }}
+              </td>
+            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
+              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
+              @foreach ($comp_eval as $keyP=>$comp_rasgo)
+                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
+                @foreach ($comp_rasgo as $comp_perfil)
+                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
+                  <td class="table-divisor_gap"></td>
+                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                </tr>
+                @endforeach
+              @endforeach
+            @endforeach
+          @endforeach
+        </table>
+      </div>
+    </div>
+    
+    <?php $page++; ?>
+    <?php $comp_data = $group_report_by_profile["Competencia Digital"]; ?>
+    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
+      <div class="title-content">
+        <h2 class="title">Competencia Digital - Detalle de Fortalezas y Oportunidades</h2>
+      </div>
+      <div class="body">
+        <div class="subtitle-content">
+          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
+        </div>
+        <table class="table-divisor">
+          <tr>
+            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
+            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
+          </tr>
+          <tr>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+          </tr>
+          @foreach ($comp_data as $keyN=>$comp_nivel)
+            <tr>
+              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
+                  {{ $keyN }}
+              </td>
+            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
+              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
+              @foreach ($comp_eval as $keyP=>$comp_rasgo)
+                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
+                @foreach ($comp_rasgo as $comp_perfil)
+                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
+                  <td class="table-divisor_gap"></td>
+                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                </tr>
+                @endforeach
+              @endforeach
+            @endforeach
+          @endforeach
+        </table>
+      </div>
+    </div>
+    
+    <?php $page++; ?>
+    <?php $comp_data = $group_report_by_profile["Comunicacion Bilingüe"]; ?>
+    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
+      <div class="title-content">
+        <h2 class="title">Comunicacion Bilingüe - Detalle de Fortalezas y Oportunidades</h2>
+      </div>
+      <div class="body">
+        <div class="subtitle-content">
+          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
+        </div>
+        <table class="table-divisor">
+          <tr>
+            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
+            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
+          </tr>
+          <tr>
+            <td class="table-divisor_gap"></td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+          </tr>
+          @foreach ($comp_data as $keyN=>$comp_nivel)
+            <tr>
+              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
+                  {{ $keyN }}
+              </td>
+            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
+              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
+              @foreach ($comp_eval as $keyP=>$comp_rasgo)
+                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
+                @foreach ($comp_rasgo as $comp_perfil)
+                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
+                  <td class="table-divisor_gap"></td>
+                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
+                  @if ($comp_perfil->total_estudiantes === 0)
+                  <td class="table-divisor_right_aside text-center">0%</td>
+                  @else
+                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  @endif
+                </tr>
+                @endforeach
+              @endforeach
+            @endforeach
+          @endforeach
+        </table>
+      </div>
+    </div>
+    
 
-
+    @if ($faculty_name == 'General' || $faculty_name == 'GENERAL')
     <?php $page++; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="body">
@@ -249,10 +516,12 @@
         </table>
       </div>
     </div>
+    @endif
+
     <?php $page++; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
-        <h2 class="title">Assessments Aplicados</h2>
+        <h2 class="title">Assessments Aplicados - Análisis de Resultados Pruebas Thomas</h2>
       </div>
       <div class="body">
         <table class="table-graphs">
@@ -321,7 +590,7 @@
           <tr>
             <td class="table-profile_text">
               <div class="table-profile_content">
-                <h4>Puntos fuertes del Equipo:</h4>
+                <h4>Resumen Conductual (PPA):</h4>
                 <p>{!! $explicacion_ppa !!}</p>
               </div>
             </td>
@@ -371,6 +640,7 @@
         </div>
         <div class="bars-text">
           <div class="bars-text_content">
+            <h4>Resumen de Inteligencia Emocional (TEIQ):</h4>
             <p>{!! $explicacion_teiq !!}</p>
           </div>
         </div>
@@ -415,6 +685,7 @@
         </div>
         <div class="bars-text">
           <div class="bars-text_content">
+            <h4>Resumen de Potencial para el Liderazgo (HPTI):</h4>
             <p>{!! $explicacion_hpti !!}</p>
           </div>
         </div>
@@ -697,6 +968,10 @@
         margin-top: 0;
         font-size: 14px;
       }
+      .bars-text_content h4 {
+        margin: 0 0 24px;
+        font-size: 14px;
+      }
       .bars-text {
         background-color: #eee;
         padding: 36px;
@@ -869,10 +1144,16 @@
 
         // Grafica PPA - Perfil de Análisis Personal
         var hb1_labels = [];var hb1_values = [];
+        var hb1_suma = 0;
         @foreach ($arrGrafica1 as $keyG1=>$objG1)
         hb1_labels.push("{{$keyG1}}");
         hb1_values.push({{$objG1}});
+        hb1_suma += {{$objG1}};
         @endforeach
+
+        for(i=0;i<hb1_values.length;i++){
+          hb1_values[i] = (hb1_values[i]*100/hb1_suma).toFixed(2);
+        }
         
         var ctxG1 = document.getElementById("horizontal-bars-1").getContext("2d", { willReadFrequently: true });
         new Chart(ctxG1, {
@@ -1255,7 +1536,7 @@
                 });
                 fetchRes.then(res => 
                         res.json()).then(d => { 
-                            //window.location.href = '<?php echo route("pdf.index_grupal", [ 'message' => 'archivo_importado']); ?>';
+                            window.location.href = '<?php echo route("pdf.index_grupal", [ 'message' => 'archivo_importado']); ?>';
                         }) 
               //window.close();
             }, 4000);
