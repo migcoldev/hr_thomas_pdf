@@ -297,9 +297,8 @@
         </table>
       </div>
     </div>
-    
+    @foreach ($group_report_by_profile as $key=>$comp_data)
     <?php $page++; ?>
-    <?php $comp_data = $group_report_by_profile["Competencia Digital"]; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
         <h2 class="title">Competencia Digital - Detalle de Fortalezas y Oportunidades</h2>
@@ -332,13 +331,13 @@
                 @foreach ($comp_rasgo as $comp_perfil)
                   <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
                   <td class="table-divisor_gap"></td>
-                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
+                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza_descripcion }}</td>
                   @if ($comp_perfil->total_estudiantes === 0)
                   <td class="table-divisor_right_aside text-center">0%</td>
                   @else
                   <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
                   @endif
-                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
+                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad_descripcion }}</td>
                   @if ($comp_perfil->total_estudiantes === 0)
                   <td class="table-divisor_right_aside text-center">0%</td>
                   @else
@@ -352,6 +351,7 @@
         </table>
       </div>
     </div>
+    @endforeach
     
     <?php $page++; ?>
     <?php $comp_data = $group_report_by_profile["Comunicacion Bilingüe"]; ?>

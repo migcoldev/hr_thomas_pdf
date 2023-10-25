@@ -23,8 +23,10 @@ class GroupReportProfile extends Model
         'nivel',  
         'llave',  
         'perfil',  
-        'fortaleza',  
+        'fortaleza', 
+        'fortaleza_descripcion',  
         'oportunidad',  
+        'oportunidad_descripcion',  
         'conteo',  
         'total_estudiantes',  
         'created_at'];

@@ -280,7 +280,9 @@ class PDFController extends Controller
                     'llave' => trim($rowProperties["Llave"]),  
                     'perfil' => trim($rowProperties["Perfil"]),  
                     'fortaleza' => intval($rowProperties["Fortaleza"]),  
-                    'oportunidad' => intval($rowProperties["Oportunidad"]),  
+                    'fortaleza_descripcion' => trim($rowProperties["Fortaleza_Descripcion"]),  
+                    'oportunidad' => intval($rowProperties["Oportunidad"]), 
+                    'oportunidad_descripcion' => trim($rowProperties["Oportunidad_Descripcion"]),  
                     'conteo' => intval($rowProperties["Conteo"]),  
                     'total_estudiantes' => intval($rowProperties["Total Estudiantes por Nivel, Competencia y Facultad"]),  
                     'created_at' => now()
