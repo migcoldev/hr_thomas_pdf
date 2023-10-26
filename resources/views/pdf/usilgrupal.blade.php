@@ -81,10 +81,11 @@
     </div>
      
     @foreach ($group_report_by_profile as $key=>$comp_data)
+          @foreach ($comp_data as $keyN=>$comp_nivel)
     <?php $page++; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
-        <h2 class="title">Competencia Digital - Detalle de Fortalezas y Oportunidades</h2>
+        <h2 class="title">{{$key}} - Detalle de Fortalezas y Oportunidades</h2>
       </div>
       <div class="body">
         <div class="subtitle-content">
@@ -92,7 +93,7 @@
         </div>
         <table class="table-divisor">
           <tr>
-            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
+            <td class="table-divisor_left_header" colspan="3" rowspan="2">Perfil Ideal</td>
             <td class="table-divisor_gap"></td>
             <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
             <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
@@ -102,17 +103,15 @@
             <td class="table-divisor_right_header">Detalle</td><td class="table-divisor_right_header">%</td>
             <td class="table-divisor_right_header">Detalle</td><td class="table-divisor_right_header">%</td>
           </tr>
-          @foreach ($comp_data as $keyN=>$comp_nivel)
             <tr>
-              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
+              <td class="table-divisor_left_aside font-10" rowspan="{{$comp_nivel['total_rows']}}">
                   {{ $keyN }}
               </td>
             @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
-              <td class="table-divisor-big_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
               @foreach ($comp_eval as $keyP=>$comp_rasgo)
-                <td class="table-divisor-big_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
+                <td class="table-divisor-big_left_value font-10" rowspan="{{count($comp_rasgo)}}">{{ $keyE }} - {{ $keyP }}</td>
                 @foreach ($comp_rasgo as $comp_perfil)
-                  <td class="table-divisor-big_right_value">{{ $comp_perfil->perfil }}</td>
+                  <td class="table-divisor-big_right_value font-10">{{ $comp_perfil->perfil }}</td>
                   <td class="table-divisor_gap"></td>
                   <td class="table-divisor-big_right_aside text-center">{{ $comp_perfil->fortaleza_descripcion }}</td>
                   @if ($comp_perfil->total_estudiantes === 0)
@@ -130,10 +129,10 @@
                 @endforeach
               @endforeach
             @endforeach
-          @endforeach
         </table>
       </div>
     </div>
+          @endforeach
     @endforeach 
 
     @if ($faculty_name == 'General' || $faculty_name == 'GENERAL')
@@ -143,102 +142,102 @@
         <div class="subtitle-content">
           <h3 class="subtitle">Estilos Conductuales y Rasgos de Personalidad mas utilizados</h3>
         </div>
-        <table class="table-divisor">
+        <table class="table-general">
           <tr>
-            <td class="table-divisor_left_header">Evaluación</td>
-            <td class="table-divisor_right_header">Perfil</td>
-            <td class="table-divisor_right_header">Rasgo</td>
-            <td class="table-divisor_right_header">Cantidad de Veces que figura el rasgo en el Perfil Ideal</td>
+            <td class="table-general_left_header">Evaluación</td>
+            <td class="table-general_right_header">Perfil</td>
+            <td class="table-general_right_header">Rasgo</td>
+            <td class="table-general_right_header">Cantidad de Veces que figura el rasgo en el Perfil Ideal</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_aside" rowspan="7">
+            <td class="table-general_left_aside" rowspan="7">
               HPTI
             </td>
-            <td class="table-divisor_left_value" rowspan="4">Moderado</td>
-            <td class="table-divisor_left_profile">Curiosidad</td>
-            <td class="table-divisor_right_value">8</td>
+            <td class="table-general_left_value" rowspan="4">Moderado</td>
+            <td class="table-general_left_profile">Curiosidad</td>
+            <td class="table-general_right_value">8</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Competitividad</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Competitividad</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Autoexigencia</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Autoexigencia</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Adaptación</td>
-            <td class="table-divisor_right_value">3</td>
+            <td class="table-general_left_profile">Adaptación</td>
+            <td class="table-general_right_value">3</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_value" rowspan="3">Óptimo</td>
-            <td class="table-divisor_left_profile">Curiosidad</td>
-            <td class="table-divisor_right_value">9</td>
+            <td class="table-general_left_value" rowspan="3">Óptimo</td>
+            <td class="table-general_left_profile">Curiosidad</td>
+            <td class="table-general_right_value">9</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Autoexigencia</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Autoexigencia</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Competitividad</td>
-            <td class="table-divisor_right_value">1</td>
+            <td class="table-general_left_profile">Competitividad</td>
+            <td class="table-general_right_value">1</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_aside" rowspan="4">
+            <td class="table-general_left_aside" rowspan="4">
               PPA
             </td>
-            <td class="table-divisor_left_value" rowspan="4">Alto</td>
-            <td class="table-divisor_left_profile">Conformidad</td>
-            <td class="table-divisor_right_value">4</td>
+            <td class="table-general_left_value" rowspan="4">Alto</td>
+            <td class="table-general_left_profile">Conformidad</td>
+            <td class="table-general_right_value">4</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Influencia</td>
-            <td class="table-divisor_right_value">2</td>
+            <td class="table-general_left_profile">Influencia</td>
+            <td class="table-general_right_value">2</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Estabilidad</td>
-            <td class="table-divisor_right_value">1</td>
+            <td class="table-general_left_profile">Estabilidad</td>
+            <td class="table-general_right_value">1</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Dominancia</td>
-            <td class="table-divisor_right_value">1</td>
+            <td class="table-general_left_profile">Dominancia</td>
+            <td class="table-general_right_value">1</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_aside" rowspan="8">
+            <td class="table-general_left_aside" rowspan="8">
               TEIQ
             </td>
-            <td class="table-divisor_left_value" rowspan="7">Alto</td>
-            <td class="table-divisor_left_profile">Adaptabilidad</td>
-            <td class="table-divisor_right_value">13</td>
+            <td class="table-general_left_value" rowspan="7">Alto</td>
+            <td class="table-general_left_profile">Adaptabilidad</td>
+            <td class="table-general_right_value">13</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Conciencia Social</td>
-            <td class="table-divisor_right_value">7</td>
+            <td class="table-general_left_profile">Conciencia Social</td>
+            <td class="table-general_right_value">7</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Automotivación</td>
-            <td class="table-divisor_right_value">6</td>
+            <td class="table-general_left_profile">Automotivación</td>
+            <td class="table-general_right_value">6</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Percepción Emocional</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Percepción Emocional</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Empatía</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Empatía</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Asertividad</td>
-            <td class="table-divisor_right_value">4</td>
+            <td class="table-general_left_profile">Asertividad</td>
+            <td class="table-general_right_value">4</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Gestión de la Emoción</td>
-            <td class="table-divisor_right_value">3</td>
+            <td class="table-general_left_profile">Gestión de la Emoción</td>
+            <td class="table-general_right_value">3</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_value">Promedio</td>
-            <td class="table-divisor_left_profile">Asertividad</td>
-            <td class="table-divisor_right_value">1</td>
+            <td class="table-general_left_value">Promedio</td>
+            <td class="table-general_left_profile">Asertividad</td>
+            <td class="table-general_right_value">1</td>
           </tr>
         </table>
       </div>
@@ -629,18 +628,46 @@
         background-color: #eee;
         padding: 36px;
       }
+      .table-general {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        table-layout: fixed;
+      }
+      .table-general td {
+        border: 1px solid #bbb;
+        padding: 6px 8px;
+      }
+      .table-general_left_header {
+        width: 280px;
+        text-align: center;
+        font-weight: bold;
+        background-color: #0c5393;
+        color: #FFF;
+      }
+      .table-general_gap {
+        width: 4px;
+        border-bottom-color: transparent !important;
+        border-top-color: transparent !important;
+      }
+      .table-general_right_header {
+        text-align: center;
+        font-weight: bold;
+        background-color: #5aa432;
+        color: #FFF;
+      }
       .table-divisor {
         width: 100%;
         border-collapse: collapse;
         font-size: 12px;
-        table-layuot: fixed;
+        tableXXX-layout: fixed;
       }
       .table-divisor td {
         border: 1px solid #bbb;
         padding: 6px 8px;
       }
       .table-divisor_left_header {
-        width: 280px;
+        width: 200px;
         text-align: center;
         font-weight: bold;
         background-color: #0c5393;
@@ -657,14 +684,17 @@
         background-color: #5aa432;
         color: #FFF;
       }
+      .font-10{
+        font-size:10px;
+      }
       .table-divisor_left_aside {
         font-weight: bold;
         background-color: #0c5393;
         text-align: center;
         color: #FFF;
-        width:65px;
-        max-width:65px;
-        min-width:65px;
+        width:40px;
+        max-width:40px;
+        min-width:40px;
       }
       .table-divisor_left_value_eval {
         font-weight: bold;
@@ -715,12 +745,12 @@
       }
       .table-divisor-big_right_aside {
         font-size:10px;
-       width: 120px;
-       max-width: 120px;
-       min-width: 120px;
+       width: 180px;
+       max-width: 180px;
+       min-width: 180px;
       }
       .table-divisor-big_right_aside2 {
-        font-size:11px;
+        font-size:10px;
        width: 40px;
        max-width: 40px;
        min-width: 40px;

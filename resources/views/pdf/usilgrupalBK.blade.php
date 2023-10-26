@@ -79,227 +79,9 @@
         </table>
       </div>
     </div>
-    
+     
+    @foreach ($group_report_by_profile as $key=>$comp_data)
     <?php $page++; ?>
-    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
-      <?php $comp_data = $group_report_by_profile["Comunicación Integral"]; ?>
-      <div class="title-content">
-        <h2 class="title">Comunicación Integral - Detalle de Fortalezas y Oportunidades</h2>
-      </div>
-      <div class="body">
-        <div class="subtitle-content">
-          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
-        </div>
-        <table class="table-divisor">
-          <tr>
-            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
-            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
-          </tr>
-          <tr>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-          </tr>
-          @foreach ($comp_data as $keyN=>$comp_nivel)
-            <tr>
-              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
-                  {{ $keyN }}
-              </td>
-            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
-              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
-              @foreach ($comp_eval as $keyP=>$comp_rasgo)
-                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
-                @foreach ($comp_rasgo as $comp_perfil)
-                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
-                  <td class="table-divisor_gap"></td>
-                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                </tr>
-                @endforeach
-              @endforeach
-            @endforeach
-          @endforeach
-        </table>
-        </div>
-
-        
-      <?php $comp_data = $group_report_by_profile["Investigación"]; ?>
-      <div class="title-content">
-        <h2 class="title">Investigación - Detalle de Fortalezas y Oportunidades</h2>
-      </div>
-      <div class="body">
-        <div class="subtitle-content">
-          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
-        </div>
-        <table class="table-divisor">
-          <tr>
-            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
-            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
-          </tr>
-          <tr>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-          </tr>
-          @foreach ($comp_data as $keyN=>$comp_nivel)
-            <tr>
-              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
-                  {{ $keyN }}
-              </td>
-            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
-              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
-              @foreach ($comp_eval as $keyP=>$comp_rasgo)
-                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
-                @foreach ($comp_rasgo as $comp_perfil)
-                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
-                  <td class="table-divisor_gap"></td>
-                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                </tr>
-                @endforeach
-              @endforeach
-            @endforeach
-          @endforeach
-        </table>
-      </div>
-    </div>
-    
-    <?php $page++; ?>
-    <?php $comp_data = $group_report_by_profile["Emprendimiento"]; ?>
-    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
-      <div class="title-content">
-        <h2 class="title">Emprendimiento - Detalle de Fortalezas y Oportunidades</h2>
-      </div>
-      <div class="body">
-        <div class="subtitle-content">
-          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
-        </div>
-        <table class="table-divisor">
-          <tr>
-            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
-            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
-          </tr>
-          <tr>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-          </tr>
-          @foreach ($comp_data as $keyN=>$comp_nivel)
-            <tr>
-              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
-                  {{ $keyN }}
-              </td>
-            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
-              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
-              @foreach ($comp_eval as $keyP=>$comp_rasgo)
-                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
-                @foreach ($comp_rasgo as $comp_perfil)
-                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
-                  <td class="table-divisor_gap"></td>
-                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                </tr>
-                @endforeach
-              @endforeach
-            @endforeach
-          @endforeach
-        </table>
-      </div>
-    </div>
-    
-    <?php $page++; ?>
-    <?php $comp_data = $group_report_by_profile["Desarrollo Humano y Sostenible"]; ?>
-    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
-      <div class="title-content">
-        <h2 class="title">Desarrollo Humano y Sostenible - Detalle de Fortalezas y Oportunidades</h2>
-      </div>
-      <div class="body">
-        <div class="subtitle-content">
-          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
-        </div>
-        <table class="table-divisor">
-          <tr>
-            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
-            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
-          </tr>
-          <tr>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-          </tr>
-          @foreach ($comp_data as $keyN=>$comp_nivel)
-            <tr>
-              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
-                  {{ $keyN }}
-              </td>
-            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
-              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
-              @foreach ($comp_eval as $keyP=>$comp_rasgo)
-                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
-                @foreach ($comp_rasgo as $comp_perfil)
-                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
-                  <td class="table-divisor_gap"></td>
-                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                </tr>
-                @endforeach
-              @endforeach
-            @endforeach
-          @endforeach
-        </table>
-      </div>
-    </div>
-    
-    <?php $page++; ?>
-    <?php $comp_data = $group_report_by_profile["Competencia Digital"]; ?>
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="title-content">
         <h2 class="title">Competencia Digital - Detalle de Fortalezas y Oportunidades</h2>
@@ -310,39 +92,38 @@
         </div>
         <table class="table-divisor">
           <tr>
-            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
+            <td class="table-divisor_left_header" colspan="3" rowspan="2">Perfil Ideal</td>
             <td class="table-divisor_gap"></td>
             <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
             <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
           </tr>
           <tr>
             <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
+            <td class="table-divisor_right_header">Detalle</td><td class="table-divisor_right_header">%</td>
+            <td class="table-divisor_right_header">Detalle</td><td class="table-divisor_right_header">%</td>
           </tr>
           @foreach ($comp_data as $keyN=>$comp_nivel)
             <tr>
-              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
+              <td class="table-divisor_left_aside font-10" rowspan="{{$comp_nivel['total_rows']}}">
                   {{ $keyN }}
               </td>
             @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
-              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
               @foreach ($comp_eval as $keyP=>$comp_rasgo)
-                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
+                <td class="table-divisor-big_left_value font-10" rowspan="{{count($comp_rasgo)}}">{{ $keyE }} - {{ $keyP }}</td>
                 @foreach ($comp_rasgo as $comp_perfil)
-                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
+                  <td class="table-divisor-big_right_value font-10">{{ $comp_perfil->perfil }}</td>
                   <td class="table-divisor_gap"></td>
-                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
+                  <td class="table-divisor-big_right_aside text-center">{{ $comp_perfil->fortaleza_descripcion }}</td>
                   @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
+                  <td class="table-divisor-big_right_aside2 text-center">0%</td>
                   @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  <td class="table-divisor-big_right_aside2 text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
                   @endif
-                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
+                  <td class="table-divisor-big_right_aside text-center">{{ $comp_perfil->oportunidad_descripcion }}</td>
                   @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
+                  <td class="table-divisor-big_right_aside2 text-center">0%</td>
                   @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
+                  <td class="table-divisor-big_right_aside2 text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
                   @endif
                 </tr>
                 @endforeach
@@ -352,62 +133,7 @@
         </table>
       </div>
     </div>
-    
-    <?php $page++; ?>
-    <?php $comp_data = $group_report_by_profile["Comunicacion Bilingüe"]; ?>
-    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
-      <div class="title-content">
-        <h2 class="title">Comunicacion Bilingüe - Detalle de Fortalezas y Oportunidades</h2>
-      </div>
-      <div class="body">
-        <div class="subtitle-content">
-          <h3 class="subtitle">Estilos conductuales y Rasgos de Personalidad Evaluados</h3>
-        </div>
-        <table class="table-divisor">
-          <tr>
-            <td class="table-divisor_left_header" colspan="4" rowspan="2">Perfil Ideal</td>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header" colspan="2">Fortaleza</td>
-            <td class="table-divisor_right_header" colspan="2">Oportunidad de Mejora</td>
-          </tr>
-          <tr>
-            <td class="table-divisor_gap"></td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-            <td class="table-divisor_right_header">#</td><td class="table-divisor_right_header">%</td>
-          </tr>
-          @foreach ($comp_data as $keyN=>$comp_nivel)
-            <tr>
-              <td class="table-divisor_left_aside" rowspan="{{$comp_nivel['total_rows']}}">
-                  {{ $keyN }}
-              </td>
-            @foreach ($comp_nivel["data"] as $keyE=>$comp_eval)
-              <td class="table-divisor_left_value_eval" rowspan="{{(count($comp_eval))}}">{{ $keyE }}</td>
-              @foreach ($comp_eval as $keyP=>$comp_rasgo)
-                <td class="table-divisor_left_value" rowspan="{{count($comp_rasgo)}}">{{ $keyP }}</td>
-                @foreach ($comp_rasgo as $comp_perfil)
-                  <td class="table-divisor_right_value">{{ $comp_perfil->perfil }}</td>
-                  <td class="table-divisor_gap"></td>
-                  <td class="table-divisor_right_aside text-center">{{ $comp_perfil->fortaleza }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->fortaleza*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                  <td class="table-divisor_right_value text-center">{{ $comp_perfil->oportunidad }}</td>
-                  @if ($comp_perfil->total_estudiantes === 0)
-                  <td class="table-divisor_right_aside text-center">0%</td>
-                  @else
-                  <td class="table-divisor_right_aside text-center">{{round($comp_perfil->oportunidad*100/$comp_perfil->total_estudiantes, 2)}}%</td>
-                  @endif
-                </tr>
-                @endforeach
-              @endforeach
-            @endforeach
-          @endforeach
-        </table>
-      </div>
-    </div>
-    
+    @endforeach 
 
     @if ($faculty_name == 'General' || $faculty_name == 'GENERAL')
     <?php $page++; ?>
@@ -416,102 +142,102 @@
         <div class="subtitle-content">
           <h3 class="subtitle">Estilos Conductuales y Rasgos de Personalidad mas utilizados</h3>
         </div>
-        <table class="table-divisor">
+        <table class="table-general">
           <tr>
-            <td class="table-divisor_left_header">Evaluación</td>
-            <td class="table-divisor_right_header">Perfil</td>
-            <td class="table-divisor_right_header">Rasgo</td>
-            <td class="table-divisor_right_header">Cantidad de Veces que figura el rasgo en el Perfil Ideal</td>
+            <td class="table-general_left_header">Evaluación</td>
+            <td class="table-general_right_header">Perfil</td>
+            <td class="table-general_right_header">Rasgo</td>
+            <td class="table-general_right_header">Cantidad de Veces que figura el rasgo en el Perfil Ideal</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_aside" rowspan="7">
+            <td class="table-general_left_aside" rowspan="7">
               HPTI
             </td>
-            <td class="table-divisor_left_value" rowspan="4">Moderado</td>
-            <td class="table-divisor_left_profile">Curiosidad</td>
-            <td class="table-divisor_right_value">8</td>
+            <td class="table-general_left_value" rowspan="4">Moderado</td>
+            <td class="table-general_left_profile">Curiosidad</td>
+            <td class="table-general_right_value">8</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Competitividad</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Competitividad</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Autoexigencia</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Autoexigencia</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Adaptación</td>
-            <td class="table-divisor_right_value">3</td>
+            <td class="table-general_left_profile">Adaptación</td>
+            <td class="table-general_right_value">3</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_value" rowspan="3">Óptimo</td>
-            <td class="table-divisor_left_profile">Curiosidad</td>
-            <td class="table-divisor_right_value">9</td>
+            <td class="table-general_left_value" rowspan="3">Óptimo</td>
+            <td class="table-general_left_profile">Curiosidad</td>
+            <td class="table-general_right_value">9</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Autoexigencia</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Autoexigencia</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Competitividad</td>
-            <td class="table-divisor_right_value">1</td>
+            <td class="table-general_left_profile">Competitividad</td>
+            <td class="table-general_right_value">1</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_aside" rowspan="4">
+            <td class="table-general_left_aside" rowspan="4">
               PPA
             </td>
-            <td class="table-divisor_left_value" rowspan="4">Alto</td>
-            <td class="table-divisor_left_profile">Conformidad</td>
-            <td class="table-divisor_right_value">4</td>
+            <td class="table-general_left_value" rowspan="4">Alto</td>
+            <td class="table-general_left_profile">Conformidad</td>
+            <td class="table-general_right_value">4</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Influencia</td>
-            <td class="table-divisor_right_value">2</td>
+            <td class="table-general_left_profile">Influencia</td>
+            <td class="table-general_right_value">2</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Estabilidad</td>
-            <td class="table-divisor_right_value">1</td>
+            <td class="table-general_left_profile">Estabilidad</td>
+            <td class="table-general_right_value">1</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Dominancia</td>
-            <td class="table-divisor_right_value">1</td>
+            <td class="table-general_left_profile">Dominancia</td>
+            <td class="table-general_right_value">1</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_aside" rowspan="8">
+            <td class="table-general_left_aside" rowspan="8">
               TEIQ
             </td>
-            <td class="table-divisor_left_value" rowspan="7">Alto</td>
-            <td class="table-divisor_left_profile">Adaptabilidad</td>
-            <td class="table-divisor_right_value">13</td>
+            <td class="table-general_left_value" rowspan="7">Alto</td>
+            <td class="table-general_left_profile">Adaptabilidad</td>
+            <td class="table-general_right_value">13</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Conciencia Social</td>
-            <td class="table-divisor_right_value">7</td>
+            <td class="table-general_left_profile">Conciencia Social</td>
+            <td class="table-general_right_value">7</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Automotivación</td>
-            <td class="table-divisor_right_value">6</td>
+            <td class="table-general_left_profile">Automotivación</td>
+            <td class="table-general_right_value">6</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Percepción Emocional</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Percepción Emocional</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Empatía</td>
-            <td class="table-divisor_right_value">5</td>
+            <td class="table-general_left_profile">Empatía</td>
+            <td class="table-general_right_value">5</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Asertividad</td>
-            <td class="table-divisor_right_value">4</td>
+            <td class="table-general_left_profile">Asertividad</td>
+            <td class="table-general_right_value">4</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_profile">Gestión de la Emoción</td>
-            <td class="table-divisor_right_value">3</td>
+            <td class="table-general_left_profile">Gestión de la Emoción</td>
+            <td class="table-general_right_value">3</td>
           </tr>
           <tr>
-            <td class="table-divisor_left_value">Promedio</td>
-            <td class="table-divisor_left_profile">Asertividad</td>
-            <td class="table-divisor_right_value">1</td>
+            <td class="table-general_left_value">Promedio</td>
+            <td class="table-general_left_profile">Asertividad</td>
+            <td class="table-general_right_value">1</td>
           </tr>
         </table>
       </div>
@@ -565,26 +291,7 @@
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="body">
         <div class="subtitle-content">
-          <h3 class="subtitle">Resultados Generales - PPA</h3>
-        </div>
-        <div class="table-ppa_content">
-          <table class="table-ppa">
-            <tr>
-              <td class="table-ppa__header table-ppa__header_col1" width="20%">PPA</td>
-              <td class="table-ppa__header table-ppa__header_col2" width="40%">#</td>
-              <td class="table-ppa__header table-ppa__header_col3" width="40%">%</td>
-            </tr>
-            @foreach ($arrGrafica1Alta as $keyG1=>$objG1)
-            <tr>
-              <td class="table-ppa__aside">Alta {{$keyG1}}</td>
-              <td class="table-ppa__value">{{$objG1}}</td>
-              <td class="table-ppa__value">{{round($objG1*100/$totalGrafica1Alta, 2).'%'}}</td>
-            </tr>
-            @endforeach
-          </table>
-        </div>
-        <div class="subtitle-content">
-          <h3 class="subtitle">PPA - Perfil de Análisis Personal</h3>
+          <h3 class="subtitle">PPA - Perfil Conductual</h3>
         </div>
         <table class="table-profile">
           <tr>
@@ -600,33 +307,6 @@
             </td>
           </tr>
         </table>
-      </div>
-    </div>
-    <?php $page++; ?>
-    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
-      <div class="body">
-        <div class="subtitle-content">
-          <h3 class="subtitle">Resultados Generales - TEIQ</h3>
-        </div>
-        <div class="table-ppa_content">
-          <table class="table-teiq">
-            <tr>
-              <td class="table-teiq_header table-teiq_header_aside">Rasgo</td>
-              <td class="table-teiq_header" colspan="2">Bajo</td>
-              <td class="table-teiq_header" colspan="2">Promedio</td>
-              <td class="table-teiq_header" colspan="2">Alto</td>
-            </tr>
-            @foreach ($arrGrafica2 as $key2=>$objRasgo)
-              <tr>
-                <td clqass="table-teiq_aside">{{$objRasgo["label"]}}</td>
-              @foreach ($objRasgo["data"] as $key3=>$itemEstado)
-                <td class="table-teiq_value">{{$itemEstado["value"]}}</td>
-                <td class="table-teiq_value">{{round($itemEstado["value"]*100/$total_conteoG2, 2)}}%</td>
-              @endforeach
-              </tr>
-            @endforeach 
-          </table>
-        </div>
       </div>
     </div>
     <?php $page++; ?>
@@ -650,35 +330,7 @@
     <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
       <div class="body">
         <div class="subtitle-content">
-          <h3 class="subtitle">Resultados Generales - HPTI</h3>
-        </div>
-        <div class="table-ppa_content">
-          <table class="table-teiq">
-            <tr>
-              <td class="table-teiq_header table-teiq_header_aside">Rasgo</td>
-              <td class="table-teiq_header" colspan="2">Bajo</td>
-              <td class="table-teiq_header" colspan="2">Promedio</td>
-              <td class="table-teiq_header" colspan="2">Alto</td>
-              <td class="table-teiq_header" colspan="2">Excesivo</td>
-            </tr>
-            @foreach ($arrGrafica3 as $key2=>$objRasgo)
-              <tr>
-                <td clqass="table-teiq_aside">{{$objRasgo["label"]}}</td>
-              @foreach ($objRasgo["data"] as $key3=>$itemEstado)
-                <td class="table-teiq_value">{{$itemEstado["value"]}}</td>
-                <td class="table-teiq_value">{{round($itemEstado["value"]*100/$total_conteoG3, 2)}}%</td>
-              @endforeach
-              </tr>
-            @endforeach 
-          </table>
-        </div>
-      </div>
-    </div>
-    <?php $page++; ?>
-    <div id="page-{{$page}}" class="page-{{$page}} page_break pdf-page">
-      <div class="body">
-        <div class="subtitle-content">
-          <h3 class="subtitle">HPTI - Inteligencia Emocional</h3>
+          <h3 class="subtitle">HPTI - Potencial para el Liderazgo</h3>
         </div>
         <div class="bars-content">
             <img src="{{$imagen_hpti}}" class="table-profile_img" />
@@ -976,18 +628,46 @@
         background-color: #eee;
         padding: 36px;
       }
+      .table-general {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+        table-layout: fixed;
+      }
+      .table-general td {
+        border: 1px solid #bbb;
+        padding: 6px 8px;
+      }
+      .table-general_left_header {
+        width: 280px;
+        text-align: center;
+        font-weight: bold;
+        background-color: #0c5393;
+        color: #FFF;
+      }
+      .table-general_gap {
+        width: 4px;
+        border-bottom-color: transparent !important;
+        border-top-color: transparent !important;
+      }
+      .table-general_right_header {
+        text-align: center;
+        font-weight: bold;
+        background-color: #5aa432;
+        color: #FFF;
+      }
       .table-divisor {
         width: 100%;
         border-collapse: collapse;
         font-size: 12px;
-        table-layuot: fixed;
+        tableXXX-layout: fixed;
       }
       .table-divisor td {
         border: 1px solid #bbb;
         padding: 6px 8px;
       }
       .table-divisor_left_header {
-        width: 280px;
+        width: 200px;
         text-align: center;
         font-weight: bold;
         background-color: #0c5393;
@@ -1004,14 +684,17 @@
         background-color: #5aa432;
         color: #FFF;
       }
+      .font-10{
+        font-size:10px;
+      }
       .table-divisor_left_aside {
         font-weight: bold;
         background-color: #0c5393;
         text-align: center;
         color: #FFF;
-        width:65px;
-        max-width:65px;
-        min-width:65px;
+        width:40px;
+        max-width:40px;
+        min-width:40px;
       }
       .table-divisor_left_value_eval {
         font-weight: bold;
@@ -1038,6 +721,39 @@
        width: 90px;
        max-width: 90px;
        min-width: 90px;
+      }
+      .table-divisor-big_left_value {
+        font-weight: bold;
+        background-color: #5693cb;
+        color: #FFF;
+        width: 100px;
+        max-width: 100px;
+        min-width: 100px;
+      }
+      .table-divisor-big_left_value_eval {
+        font-weight: bold;
+        background-color: #5693cb;
+        color: #FFF;
+        width: 50px;
+        max-width: 50px;
+        min-width: 50px;
+      }
+      .table-divisor-big_right_value {
+       width: 60px;
+       max-width: 60px;
+       min-width: 60px;
+      }
+      .table-divisor-big_right_aside {
+        font-size:10px;
+       width: 180px;
+       max-width: 180px;
+       min-width: 180px;
+      }
+      .table-divisor-big_right_aside2 {
+        font-size:10px;
+       width: 40px;
+       max-width: 40px;
+       min-width: 40px;
       }
       .table-teiq {
         width: 100%;
