@@ -255,7 +255,7 @@ class PDFController extends Controller
 
         $rows = SimpleExcelReader::create(Storage::disk('local')->path($filename), 'xlsx')->trimHeaderRow()
         ->fromSheetName("ResultadosSegúnPerfilIdeal")
-        ->useHeaders(['Evaluación','Rasgo','Nombre Competencia','Nivel','Llave','Perfil','Fortaleza','Oportunidad','Facultad','Conteo','Total Estudiantes por Nivel, Competencia y Facultad'])
+        ->useHeaders(['Evaluación','Rasgo','Nombre Competencia','Nivel','Llave','Perfil','Fortaleza','Fortaleza_Descripcion','Oportunidad','Oportunidad_Descripcion','Facultad','Conteo','Total Estudiantes por Nivel, Competencia y Facultad'])
         ->getRows();
         $rows->each(function(array $rowProperties) {
             $arrAux = session('info_global', []);
