@@ -1202,15 +1202,14 @@
             unit: 'in',
             format: 'A4'
           };
-          var arrPdfImgs = [];
-          async function myAjax(selector, pdf) {
-          }
+          var arrPdfImgs = []; 
           setTimeout(function(){
             var pdf = new jsPDF(jsPDFOpts);
             var div_anterior = 0;
             var slides = document.getElementsByClassName("pdf-page");
             var pdfWidth = pdf.internal.pageSize.getWidth();
             var pdfHeight = 0;
+                console.log("Iniciando PDF...");
             for (var i = 0; i < slides.length; i++) {
                 pdf.addPage('A4', 'portrait');
             }
@@ -1228,7 +1227,7 @@
                     console.log("PAGE : "+selector_index);
                     pdf.setPage(selector_index);
                     pdf.addImage(img, 'JPEG', 0, 0, pdfWidth, pdfHeight);
-                });
+                }); 
               return true
             }
             
@@ -1238,10 +1237,11 @@
             }
             setTimeout(function(){ 
                 //pdf.save('reporte_candidato.pdf'); 
+                console.log("Enviando PDF...");
                 var pageCount = pdf.internal.getNumberOfPages();
                 pdf.deletePage(pageCount);
                 var blob = pdf.output('blob');
-                console.log(blob);
+                //console.log(blob);
                 var formData = new FormData();
                 formData.append('pdf', blob);
                 formData.append('name', '{{ $report_name }}');
@@ -1251,12 +1251,13 @@
                     body: formData 
                 });
                 fetchRes.then(res => 
-                        res.json()).then(d => { 
+                        res.json()).then(d => {  
+                          console.log("PDF Enviado...");
                             window.location.href = '<?php echo route("pdf.index_grupal", [ 'message' => 'archivo_importado']); ?>';
                         }) 
               //window.close();
             }, 4500);
-          }, 4000);
+          }, 4500);
         });
     </script>
     </div>
