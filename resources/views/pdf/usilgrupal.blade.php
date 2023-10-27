@@ -1253,11 +1253,11 @@
                 fetchRes.then(res => 
                         res.json()).then(d => {  
                           console.log("PDF Enviado...");
-                            //window.location.href = '<?php echo route("pdf.index_grupal", [ 'message' => 'archivo_importado']); ?>';
+                            window.location.href = '<?php echo route("pdf.index_grupal", [ 'message' => 'archivo_importado']); ?>';
                         }) 
               //window.close();
-            }, 4500);
-          }, 4500);
+            }, 6000);
+          }, 6000);
         });
     </script>
     </div>
