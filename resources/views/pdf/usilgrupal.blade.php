@@ -1255,8 +1255,8 @@
                             window.location.href = '<?php echo route("pdf.index_grupal", [ 'message' => 'archivo_importado']); ?>';
                         }) 
               //window.close();
-            }, 4000);
-          }, 3000);
+            }, 4500);
+          }, 4000);
         });
     </script>
     </div>
